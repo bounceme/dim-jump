@@ -12,7 +12,7 @@ function s:prune(kw)
 endfunction
 
 let s:defs = json_decode(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
-function! s:GotoDefCword()
+function s:GotoDefCword()
   if !exists('b:dim_jump_lang')
     let b:dim_jump_lang = filter(s:defs,'v:val.language ==? &ft')
   endif
@@ -21,4 +21,4 @@ function! s:GotoDefCword()
   echom token
 endfunction
 
-command! DimJumpPos call <SID>GotoDefCword()
+command DimJumpPos call <SID>GotoDefCword()
