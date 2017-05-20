@@ -1,153 +1,121 @@
-{  
-   "type":[  
-      "function",
-      "supports",
-      [  
+[
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "elisp",
-      "regex",
-      "((defun|cl-defun)\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"elisp",
+      "regex":"((defun|cl-defun)\\s+JJJ\\j",
+      "tests":[
          "(defun test (blah)",
          "(defun test\n",
          "(cl-defun test (blah)",
          "(cl-defun test\n"
       ],
-      "not",
-      [  
+      "not":[
          "(defun test-asdf (blah)",
          "(defun test-blah\n",
          "(cl-defun test-asdf (blah)",
          "(cl-defun test-blah\n"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "elisp",
-      "regex",
-      "\\(defvar\\b\\s*JJJ\\j",
-      "tests",
-      [  
+      "language":"elisp",
+      "regex":"\\(defvar\\b\\s*JJJ\\j",
+      "tests":[
          "(defvar test ",
          "(defvar test\n"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "elisp",
-      "regex",
-      "\\(defcustom\\b\\s*JJJ\\j",
-      "tests",
-      [  
+      "language":"elisp",
+      "regex":"\\(defcustom\\b\\s*JJJ\\j",
+      "tests":[
          "(defcustom test ",
          "(defcustom test\n"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "elisp",
-      "regex",
-      "\\(setq\\b\\s*JJJ\\j",
-      "tests",
-      [  
+      "language":"elisp",
+      "regex":"\\(setq\\b\\s*JJJ\\j",
+      "tests":[
          "(setq test 123)"
       ],
-      "not",
-      [  
+      "not":[
          "setq test-blah 123)"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "elisp",
-      "regex",
-      "\\(JJJ\\s+",
-      "tests",
-      [  
+      "language":"elisp",
+      "regex":"\\(JJJ\\s+",
+      "tests":[
          "(let ((test 123)))"
       ],
-      "not",
-      [  
+      "not":[
          "(let ((test-2 123)))"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "rg",
          "git-grep"
       ],
-      "language",
-      "elisp",
-      "regex",
-      "\\((defun|cl-defun)\\s*.+\\(?\\s*JJJ\\j\\s*\\)?",
-      "tests",
-      [  
+      "language":"elisp",
+      "regex":"\\((defun|cl-defun)\\s*.+\\(?\\s*JJJ\\j\\s*\\)?",
+      "tests":[
          "(defun blah (test)",
          "(defun blah (test blah)",
          "(defun (blah test)"
       ],
-      "not",
-      [  
+      "not":[
          "(defun blah (test-1)",
          "(defun blah (test-2 blah)",
          "(defun (blah test-3)"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "rg",
          "git-grep"
       ],
-      "language",
-      "c++",
-      "regex",
-      "\\bJJJ(\\s|\\))*\\((\\w|[,&*.<>]|\\s)*(\\))\\s*(const|->|\\{|$)|typedef\\s+(\\w|[(*]|\\s)+JJJ(\\)|\\s)*\\(",
-      "tests",
-      [  
+      "language":"c++",
+      "regex":"\\bJJJ(\\s|\\))*\\((\\w|[,&*.<>]|\\s)*(\\))\\s*(const|->|\\{|$)|typedef\\s+(\\w|[(*]|\\s)+JJJ(\\)|\\s)*\\(",
+      "tests":[
          "int test(){",
          "my_struct (*test)(int a, int b){",
          "auto MyClass::test ( Builder& reference, ) -> decltype( builder.func() ) {",
@@ -155,26 +123,21 @@
          "test::test() {",
          "typedef int (*test)(int);"
       ],
-      "not",
-      [  
+      "not":[
          "return test();)",
          "int test(a, b);",
          "if( test() ) {",
          "else test();"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag"
       ],
-      "language",
-      "c++",
-      "regex",
-      "\\b(?!(class\\b|struct\\b|return\\b|else\\b|delete\\b))(\\w+|[,>])([*&]|\\s)+JJJ\\s*(\\[(\\d|\\s)*\\])*\\s*([=,(){;]|:\\s*\\d)|#define\\s+JJJ\\b",
-      "tests",
-      [  
+      "language":"c++",
+      "regex":"\\b(?!(class\\b|struct\\b|return\\b|else\\b|delete\\b))(\\w+|[,>])([*&]|\\s)+JJJ\\s*(\\[(\\d|\\s)*\\])*\\s*([=,(){;]|:\\s*\\d)|#define\\s+JJJ\\b",
+      "tests":[
          "int test=2;",
          "char *test;",
          "int x = 1, test = 2",
@@ -183,27 +146,22 @@
          "typedef int test;",
          "unsigned int test:2"
       ],
-      "not",
-      [  
+      "not":[
          "return test;",
          "#define NOT test",
          "else test=2;"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "rg",
          "git-grep"
       ],
-      "language",
-      "c++",
-      "regex",
-      "\\b(class|struct|enum|union)\\b\\s*JJJ\\b\\s*(final\\s*)?(:((\\s*\\w+\\s*::)*\\s*\\w*\\s*<?(\\s*\\w+\\s*::)*\\w+>?\\s*,*)+)?((\\{|$))|}\\s*JJJ\\b\\s*;",
-      "tests",
-      [  
+      "language":"c++",
+      "regex":"\\b(class|struct|enum|union)\\b\\s*JJJ\\b\\s*(final\\s*)?(:((\\s*\\w+\\s*::)*\\s*\\w*\\s*<?(\\s*\\w+\\s*::)*\\w+>?\\s*,*)+)?((\\{|$))|}\\s*JJJ\\b\\s*;",
+      "tests":[
          "typedef struct test {",
          "enum test {",
          "} test;",
@@ -211,190 +169,149 @@
          "class test final: public Parent1, private Parent2{",
          "class test : public std::vector<int> {"
       ],
-      "not",
-      [  
+      "not":[
          "union test var;",
          "struct test function() {"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "clojure",
-      "regex",
-      "\\(def\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"clojure",
+      "regex":"\\(def\\s+JJJ\\j",
+      "tests":[
          "(def test (foo)"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "clojure",
-      "regex",
-      "\\(defn-?\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"clojure",
+      "regex":"\\(defn-?\\s+JJJ\\j",
+      "tests":[
          "(defn test [foo]",
          "(defn- test [foo]"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "clojure",
-      "regex",
-      "\\(defmacro\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"clojure",
+      "regex":"\\(defmacro\\s+JJJ\\j",
+      "tests":[
          "(defmacro test [foo]"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "clojure",
-      "regex",
-      "\\(deftype\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"clojure",
+      "regex":"\\(deftype\\s+JJJ\\j",
+      "tests":[
          "(deftype test [foo]"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "clojure",
-      "regex",
-      "\\(defmulti\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"clojure",
+      "regex":"\\(defmulti\\s+JJJ\\j",
+      "tests":[
          "(defmulti test fn"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "clojure",
-      "regex",
-      "\\(defmethod\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"clojure",
+      "regex":"\\(defmethod\\s+JJJ\\j",
+      "tests":[
          "(defmethod test type"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "clojure",
-      "regex",
-      "\\(definterface\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"clojure",
+      "regex":"\\(definterface\\s+JJJ\\j",
+      "tests":[
          "(definterface test (foo)"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "clojure",
-      "regex",
-      "\\(defprotocol\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"clojure",
+      "regex":"\\(defprotocol\\s+JJJ\\j",
+      "tests":[
          "(defprotocol test (foo)"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "clojure",
-      "regex",
-      "\\(defrecord\\s+JJJ\\j",
-      "tests",
-      [  
+      "language":"clojure",
+      "regex":"\\(defrecord\\s+JJJ\\j",
+      "tests":[
          "(defrecord test [foo]"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "coffeescript",
-      "regex",
-      "^\\s*JJJ\\s*[=:].*[-=]>",
-      "tests",
-      [  
+      "language":"coffeescript",
+      "regex":"^\\s*JJJ\\s*[=:].*[-=]>",
+      "tests":[
          "test = ()  =>",
          "test= =>",
          "test = ->",
@@ -404,195 +321,155 @@
          "test : ->",
          "test:()->"
       ],
-      "not",
-      [  
+      "not":[
          "# test = =>",
          "test = 1"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "coffeescript",
-      "regex",
-      "^\\s*JJJ\\s*[:=][^:=-][^>]+$",
-      "tests",
-      [  
+      "language":"coffeescript",
+      "regex":"^\\s*JJJ\\s*[:=][^:=-][^>]+$",
+      "tests":[
          "test = $",
          "test : [",
          "test = {",
          "test = a"
       ],
-      "not",
-      [  
+      "not":[
          "test::a",
          "test: =>",
          "test == 1",
          "# test = 1"
       ]
-   ],
-   "type":[  
-      "class",
-      "supports",
-      [  
+   },
+   {
+      "type":"class",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "coffeescript",
-      "regex",
-      "^\\s*\\bclass\\s+JJJ",
-      "tests",
-      [  
+      "language":"coffeescript",
+      "regex":"^\\s*\\bclass\\s+JJJ",
+      "tests":[
          "class test",
          "class test extends"
       ],
-      "not",
-      [  
+      "not":[
          "# class"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "objc",
-      "regex",
-      "\\)\\s*JJJ(:|\\b|\\s)",
-      "tests",
-      [  
+      "language":"objc",
+      "regex":"\\)\\s*JJJ(:|\\b|\\s)",
+      "tests":[
          "- (void)test",
          "- (void)test:(UIAlertView *)alertView"
       ],
-      "not",
-      [  
+      "not":[
          "- (void)testnot",
          "- (void)testnot:(UIAlertView *)alertView"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "objc",
-      "regex",
-      "\\b\\*?JJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"objc",
+      "regex":"\\b\\*?JJJ\\s*=[^=\\n]+",
+      "tests":[
          "NSString *test = @\"asdf\""
       ],
-      "tests",
-      [  
+      "not":[
          "NSString *testnot = @\"asdf\"",
          "NSString *nottest = @\"asdf\""
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "swift",
-      "regex",
-      "(let|var)\\s*JJJ\\s*(=|:)[^=:\\n]+",
-      "tests",
-      [  
+      "language":"swift",
+      "regex":"(let|var)\\s*JJJ\\s*(=|:)[^=:\\n]+",
+      "tests":[
          "let test = 1234",
          "var test = 1234",
          "private lazy var test: UITapGestureRecognizer"
       ],
-      "not",
-      [  
+      "not":[
          "if test == 1234:"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "swift",
-      "regex",
-      "func\\s*JJJ\\b\\s*\\(",
-      "tests",
-      [  
+      "language":"swift",
+      "regex":"func\\s*JJJ\\b\\s*\\(",
+      "tests":[
          "func test(asdf)",
          "func test()"
       ],
-      "not",
-      [  
+      "not":[
          "func testnot(asdf)",
          "func testnot()"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "swift",
-      "regex",
-      "(class|struct)\\s*JJJ\\b\\s*?",
-      "tests",
-      [  
+      "language":"swift",
+      "regex":"(class|struct)\\s*JJJ\\b\\s*?",
+      "tests":[
          "class test:",
          "class test: UIWindow"
       ],
-      "not",
-      [  
+      "not":[
          "class testnot:",
          "class testnot(object):"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "rg"
       ],
-      "language",
-      "csharp",
-      "regex",
-      "^\\s*(?:[^=\\W]+\\s+){1,3}JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"csharp",
+      "regex":"^\\s*(?:[^=\\W]+\\s+){1,3}JJJ\\s*\\(",
+      "tests":[
          "int test()",
          "int test(param)",
          "static int test()",
@@ -601,73 +478,58 @@
          "private virtual SomeType test(param)",
          "static int test()"
       ],
-      "not",
-      [  
+      "not":[
          "test()",
          "testnot()",
          "blah = new test()"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "csharp",
-      "regex",
-      "\\s*\\bJJJ\\s*=[^=\\n)]+",
-      "tests",
-      [  
+      "language":"csharp",
+      "regex":"\\s*\\bJJJ\\s*=[^=\\n)]+",
+      "tests":[
          "int test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "if test == 1234:",
          "int nottest = 44"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "csharp",
-      "regex",
-      "(class|interface)\\s*JJJ\\b",
-      "tests",
-      [  
+      "language":"csharp",
+      "regex":"(class|interface)\\s*JJJ\\b",
+      "tests":[
          "class test:",
          "public class test : IReadableChannel, I"
       ],
-      "not",
-      [  
+      "not":[
          "class testnot:",
          "public class testnot : IReadableChannel, I"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "rg"
       ],
-      "language",
-      "java",
-      "regex",
-      "^\\s*(?:[^=\\W]+\\s+){1,3}JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"java",
+      "regex":"^\\s*(?:[^=\\W]+\\s+){1,3}JJJ\\s*\\(",
+      "tests":[
          "int test()",
          "int test(param)",
          "static int test()",
@@ -676,165 +538,130 @@
          "private virtual SomeType test(param)",
          "static int test()"
       ],
-      "not",
-      [  
+      "not":[
          "test()",
          "testnot()",
          "blah = new test()"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "java",
-      "regex",
-      "\\s*\\bJJJ\\s*=[^=\\n)]+",
-      "tests",
-      [  
+      "language":"java",
+      "regex":"\\s*\\bJJJ\\s*=[^=\\n)]+",
+      "tests":[
          "int test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "if test == 1234:",
          "int nottest = 44"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "java",
-      "regex",
-      "(class|interface)\\s*JJJ\\b",
-      "tests",
-      [  
+      "language":"java",
+      "regex":"(class|interface)\\s*JJJ\\b",
+      "tests":[
          "class test:",
          "public class test implements Something"
       ],
-      "not",
-      [  
+      "not":[
          "class testnot:",
          "public class testnot implements Something"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "python",
-      "regex",
-      "\\s*JJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"python",
+      "regex":"\\s*JJJ\\s*=[^=\\n]+",
+      "tests":[
          "test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "if test == 1234:"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "python",
-      "regex",
-      "def\\s*JJJ\\b\\s*\\(",
-      "tests",
-      [  
+      "language":"python",
+      "regex":"def\\s*JJJ\\b\\s*\\(",
+      "tests":[
          "\tdef test(asdf)",
          "def test()"
       ],
-      "not",
-      [  
+      "not":[
          "\tdef testnot(asdf)",
          "def testnot()"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "python",
-      "regex",
-      "class\\s*JJJ\\b\\s*\\(?",
-      "tests",
-      [  
+      "language":"python",
+      "regex":"class\\s*JJJ\\b\\s*\\(?",
+      "tests":[
          "class test(object):",
          "class test:"
       ],
-      "not",
-      [  
+      "not":[
          "class testnot:",
          "class testnot(object):"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "ruby",
-      "regex",
-      "\\s*JJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"ruby",
+      "regex":"\\s*JJJ\\s*=[^=\\n]+",
+      "tests":[
          "test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "if test == 1234"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "rg"
       ],
-      "language",
-      "ruby",
-      "regex",
-      "\\bdef\\s+(?:\\w+(::|\\.))*JJJ\\j",
-      "tests",
-      [  
+      "language":"ruby",
+      "regex":"\\bdef\\s+(?:\\w+(::|\\.))*JJJ\\j",
+      "tests":[
          "def test(foo)",
          "def test()",
          "def test foo",
@@ -842,759 +669,594 @@
          "def self.test()",
          "def MODULE::test()"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "rg"
       ],
-      "language",
-      "ruby",
-      "regex",
-      "\\bdefine(?:_singleton|_instance)?_method\\s*(?:\\(\\s*)?:JJJ\\j",
-      "tests",
-      [  
+      "language":"ruby",
+      "regex":"\\bdefine(?:_singleton|_instance)?_method\\s*(?:\\(\\s*)?:JJJ\\j",
+      "tests":[
          "define_method(:test, &body)",
          "mod.define_instance_method(:test) { body }"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "rg"
       ],
-      "language",
-      "ruby",
-      "regex",
-      "\\bclass\\s+(?:\\w*::)*JJJ\\j",
-      "tests",
-      [  
+      "language":"ruby",
+      "regex":"\\bclass\\s+(?:\\w*::)*JJJ\\j",
+      "tests":[
          "class test",
          "class Foo::test"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "rg"
       ],
-      "language",
-      "ruby",
-      "regex",
-      "\\bmodule\\s+(?:\\w*::)*JJJ\\j",
-      "tests",
-      [  
+      "language":"ruby",
+      "regex":"\\bmodule\\s+(?:\\w*::)*JJJ\\j",
+      "tests":[
          "module test",
          "module Foo::test"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "scala",
-      "regex",
-      "\\bval\\s*JJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"scala",
+      "regex":"\\bval\\s*JJJ\\s*=[^=\\n]+",
+      "tests":[
          "val test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "case test => 1234"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "scala",
-      "regex",
-      "\\bvar\\s*JJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"scala",
+      "regex":"\\bvar\\s*JJJ\\s*=[^=\\n]+",
+      "tests":[
          "var test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "case test => 1234"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "scala",
-      "regex",
-      "\\btype\\s*JJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"scala",
+      "regex":"\\btype\\s*JJJ\\s*=[^=\\n]+",
+      "tests":[
          "type test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "case test => 1234"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "scala",
-      "regex",
-      "\\bdef\\s*JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"scala",
+      "regex":"\\bdef\\s*JJJ\\s*\\(",
+      "tests":[
          "def test(asdf)",
          "def test()"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "scala",
-      "regex",
-      "class\\s*JJJ\\s*\\(?",
-      "tests",
-      [  
+      "language":"scala",
+      "regex":"class\\s*JJJ\\s*\\(?",
+      "tests":[
          "class test(object)"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "scala",
-      "regex",
-      "trait\\s*JJJ\\s*\\(?",
-      "tests",
-      [  
+      "language":"scala",
+      "regex":"trait\\s*JJJ\\s*\\(?",
+      "tests":[
          "trait test(object)"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "scala",
-      "regex",
-      "object\\s*JJJ\\s*\\(?",
-      "tests",
-      [  
+      "language":"scala",
+      "regex":"object\\s*JJJ\\s*\\(?",
+      "tests":[
          "object test(object)"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "r",
-      "regex",
-      "\\bJJJ\\s*=[^=><]",
-      "tests",
-      [  
+      "language":"r",
+      "regex":"\\bJJJ\\s*=[^=><]",
+      "tests":[
          "test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "if (test == 1234)"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "r",
-      "regex",
-      "\\bJJJ\\s*<-\\s*function",
-      "tests",
-      [  
+      "language":"r",
+      "regex":"\\bJJJ\\s*<-\\s*function",
+      "tests":[
          "test <- function"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "perl",
-      "regex",
-      "sub\\s*JJJ\\s*\\{",
-      "tests",
-      [  
+      "language":"perl",
+      "regex":"sub\\s*JJJ\\s*\\{",
+      "tests":[
          "sub test{",
          "sub test {"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "perl",
-      "regex",
-      "JJJ\\s*=\\s*",
-      "tests",
-      [  
+      "language":"perl",
+      "regex":"JJJ\\s*=\\s*",
+      "tests":[
          "$test = 1234"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "shell",
-      "regex",
-      "function\\s*JJJ\\s*",
-      "tests",
-      [  
+      "language":"shell",
+      "regex":"function\\s*JJJ\\s*",
+      "tests":[
          "function test{",
          "function test {",
          "function test () {"
       ],
-      "not",
-      [  
+      "not":[
          "function nottest {"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "shell",
-      "regex",
-      "\\bJJJ\\s*=\\s*",
-      "tests",
-      [  
+      "language":"shell",
+      "regex":"\\bJJJ\\s*=\\s*",
+      "tests":[
          "test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "blahtest = 1234"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "php",
-      "regex",
-      "function\\s*JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"php",
+      "regex":"function\\s*JJJ\\s*\\(",
+      "tests":[
          "function test()",
          "function test ()"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "php",
-      "regex",
-      "(\\s|->|\\$|::)JJJ\\s*=\\s*",
-      "tests",
-      [  
+      "language":"php",
+      "regex":"(\\s|->|\\$|::)JJJ\\s*=\\s*",
+      "tests":[
          "$test = 1234",
          "$foo->test = 1234"
       ]
-   ],
-   "type":[  
-      "trait",
-      "supports",
-      [  
+   },
+   {
+      "type":"trait",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "php",
-      "regex",
-      "trait\\s*JJJ\\s*\\{",
-      "tests",
-      [  
+      "language":"php",
+      "regex":"trait\\s*JJJ\\s*\\{",
+      "tests":[
          "trait test{",
          "trait test {"
       ]
-   ],
-   "type":[  
-      "interface",
-      "supports",
-      [  
+   },
+   {
+      "type":"interface",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "php",
-      "regex",
-      "interface\\s*JJJ\\s*\\{",
-      "tests",
-      [  
+      "language":"php",
+      "regex":"interface\\s*JJJ\\s*\\{",
+      "tests":[
          "interface test{",
          "interface test {"
       ]
-   ],
-   "type":[  
-      "class",
-      "supports",
-      [  
+   },
+   {
+      "type":"class",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "php",
-      "regex",
-      "class\\s*JJJ\\s*(extends|implements|\\{)",
-      "tests",
-      [  
+      "language":"php",
+      "regex":"class\\s*JJJ\\s*(extends|implements|\\{)",
+      "tests":[
          "class test{",
          "class test {",
          "class test extends foo",
          "class test implements foo"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "faust",
-      "regex",
-      "\\bJJJ(\\(.+\\))*\\s*=",
-      "tests",
-      [  
+      "language":"faust",
+      "regex":"\\bJJJ(\\(.+\\))*\\s*=",
+      "tests":[
          "test = osc + 0.5;",
          "test(freq) = osc(freq) + 0.5;"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "fortran",
-      "regex",
-      "\\s*\\bJJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"fortran",
+      "regex":"\\s*\\bJJJ\\s*=[^=\\n]+",
+      "tests":[
          "test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "if (test == 1234)"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "fortran",
-      "regex",
-      "\\b(function|subroutine)\\s+JJJ\\b\\s*\\(",
-      "tests",
-      [  
+      "language":"fortran",
+      "regex":"\\b(function|subroutine)\\s+JJJ\\b\\s*\\(",
+      "tests":[
          "function test (foo)",
          "integer function test(foo)",
          "subroutine test (foo, bar)"
       ],
-      "not",
-      [  
+      "not":[
          "end function test",
          "end subroutine test"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "fortran",
-      "regex",
-      "^\\s*module\\s+JJJ\\s*",
-      "tests",
-      [  
+      "language":"fortran",
+      "regex":"^\\s*module\\s+JJJ\\s*",
+      "tests":[
          "module test"
       ],
-      "not",
-      [  
+      "not":[
          "end module test"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "go",
-      "regex",
-      "\\s*\\bJJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"go",
+      "regex":"\\s*\\bJJJ\\s*=[^=\\n]+",
+      "tests":[
          "test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "if test == 1234 {"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "go",
-      "regex",
-      "\\s*\\bJJJ\\s*:=\\s*",
-      "tests",
-      [  
+      "language":"go",
+      "regex":"\\s*\\bJJJ\\s*:=\\s*",
+      "tests":[
          "test := 1234"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "go",
-      "regex",
-      "func\\s+\\([^\\)]*\\)\\s+JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"go",
+      "regex":"func\\s+\\([^\\)]*\\)\\s+JJJ\\s*\\(",
+      "tests":[
          "func (s *blah) test(filename string) string {"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "go",
-      "regex",
-      "func\\s+JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"go",
+      "regex":"func\\s+JJJ\\s*\\(",
+      "tests":[
          "func test(url string) (string, error)"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "go",
-      "regex",
-      "type\\s+JJJ\\s+struct\\s+\\{",
-      "tests",
-      [  
+      "language":"go",
+      "regex":"type\\s+JJJ\\s+struct\\s+\\{",
+      "tests":[
          "type test struct {"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "regex",
-      "(service|factory)\\(['\"]JJJ['\"]",
-      "tags",
-      [  
+      "language":"javascript",
+      "regex":"(service|factory)\\(['\"]JJJ['\"]",
+      "tags":[
          "angular"
       ],
-      "tests",
-      [  
+      "tests":[
          "module.factory('test', [\"$rootScope\", function($rootScope) {"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "regex",
-      "\\bJJJ\\s*[=:]\\s*\\([^\\)]*\\)\\s+=>",
-      "tags",
-      [  
+      "language":"javascript",
+      "regex":"\\bJJJ\\s*[=:]\\s*\\([^\\)]*\\)\\s+=>",
+      "tags":[
          "es6"
       ],
-      "tests",
-      [  
+      "tests":[
          "const test = (foo) => ",
          "test: (foo) => {",
          "  test: (foo) => {"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "regex",
-      "\\bJJJ\\s*\\([^\\)]*\\)\\s*[{]",
-      "tags",
-      [  
+      "language":"javascript",
+      "regex":"\\bJJJ\\s*\\([^\\)]*\\)\\s*[{]",
+      "tags":[
          "es6"
       ],
-      "tests",
-      [  
+      "tests":[
          "test(foo) {",
          "test (foo){",
          "test(foo){"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "tags",
-      [  
+      "language":"javascript",
+      "tags":[
          "es6"
       ],
-      "regex",
-      "class\\s*JJJ\\s*[\\(\\{]",
-      "tests",
-      [  
+      "regex":"class\\s*JJJ\\s*[\\(\\{]",
+      "tests":[
          "class test(object) {",
          "class test{"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "tags",
-      [  
+      "language":"javascript",
+      "tags":[
          "es6"
       ],
-      "regex",
-      "class\\s*JJJ\\s+extends",
-      "tests",
-      [  
+      "regex":"class\\s*JJJ\\s+extends",
+      "tests":[
          "class test extends Component{"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "regex",
-      "\\s*\\bJJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"javascript",
+      "regex":"\\s*\\bJJJ\\s*=[^=\\n]+",
+      "tests":[
          "test = 1234",
          "const test = props =>"
       ],
-      "not",
-      [  
+      "not":[
          "if (test === 1234)"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "regex",
-      "\\bfunction\\b[^\\(]*\\(\\s*[^\\)]*\\bJJJ\\b\\s*,?\\s*\\)?",
-      "tests",
-      [  
+      "language":"javascript",
+      "regex":"\\bfunction\\b[^\\(]*\\(\\s*[^\\)]*\\bJJJ\\b\\s*,?\\s*\\)?",
+      "tests":[
          "function (test)",
          "function (test, blah)",
          "function somefunc(test, blah) {",
          "function(blah, test)"
       ],
-      "not",
-      [  
+      "not":[
          "function (testLen)",
          "function (test1, blah)",
          "function somefunc(testFirst, blah) {",
@@ -1604,152 +1266,120 @@
          "function somefunc(Firsttest, blah) {",
          "function(blah, Lasttest)"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "regex",
-      "function\\s*JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"javascript",
+      "regex":"function\\s*JJJ\\s*\\(",
+      "tests":[
          "function test()",
          "function test ()"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "regex",
-      "\\bJJJ\\s*:\\s*function\\s*\\(",
-      "tests",
-      [  
+      "language":"javascript",
+      "regex":"\\bJJJ\\s*:\\s*function\\s*\\(",
+      "tests":[
          "test: function()"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "javascript",
-      "regex",
-      "\\bJJJ\\s*=\\s*function\\s*\\(",
-      "tests",
-      [  
+      "language":"javascript",
+      "regex":"\\bJJJ\\s*=\\s*function\\s*\\(",
+      "tests":[
          "test = function()"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag"
       ],
-      "language",
-      "haskell",
-      "regex",
-      "^\\s*(let)?\\s*JJJ\\b\\s*(.+)?(?<==)",
-      "tests",
-      [  
+      "language":"haskell",
+      "regex":"^\\s*(let)?\\s*JJJ\\b\\s*(.+)?(?<==)",
+      "tests":[
          "test n = n * 2",
          "let test x y = x * y"
       ],
-      "not",
-      [  
+      "not":[
          "nottest n = n * 2",
          "let testnot x y = x * y",
          "test $ y z"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "haskell",
-      "regex",
-      "^\\s*(let)?\\s*JJJ\\b\\s*::",
-      "tests",
-      [  
+      "language":"haskell",
+      "regex":"^\\s*(let)?\\s*JJJ\\b\\s*::",
+      "tests":[
          "test :: FilePath -> HttpSession [PkgIndexIndex]",
          "test :: PackageId -> Tar.Entry -> PkgIndexInfo"
       ],
-      "not",
-      [  
+      "not":[
          "nottest :: FilePath -> HttpSession [PkgIndexIndex]",
          "testnot :: PackageId -> Tar.Entry -> PkgIndexInfo"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "lua",
-      "regex",
-      "\\s*\\bJJJ\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"lua",
+      "regex":"\\s*\\bJJJ\\s*=[^=\\n]+",
+      "tests":[
          "test = 1234"
       ],
-      "not",
-      [  
+      "not":[
          "if test === 1234"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "lua",
-      "regex",
-      "\\bfunction\\b[^\\(]*\\(\\s*[^\\)]*\\bJJJ\\b\\s*,?\\s*\\)?",
-      "tests",
-      [  
+      "language":"lua",
+      "regex":"\\bfunction\\b[^\\(]*\\(\\s*[^\\)]*\\bJJJ\\b\\s*,?\\s*\\)?",
+      "tests":[
          "function (test)",
          "function (test, blah)",
          "function somefunc(test, blah)",
          "function(blah, test)"
       ],
-      "not",
-      [  
+      "not":[
          "function (testLen)",
          "function (test1, blah)",
          "function somefunc(testFirst, blah)",
@@ -1759,98 +1389,78 @@
          "function somefunc(Firsttest, blah)",
          "function(blah, Lasttest)"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "lua",
-      "regex",
-      "function\\s*JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"lua",
+      "regex":"function\\s*JJJ\\s*\\(",
+      "tests":[
          "function test()",
          "function test ()"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "lua",
-      "regex",
-      "function\\s*.+[.:]JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"lua",
+      "regex":"function\\s*.+[.:]JJJ\\s*\\(",
+      "tests":[
          "function MyClass.test()",
          "function MyClass.test ()",
          "function MyClass:test()",
          "function MyClass:test ()"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "lua",
-      "regex",
-      "\\bJJJ\\s*=\\s*function\\s*\\(",
-      "tests",
-      [  
+      "language":"lua",
+      "regex":"\\bJJJ\\s*=\\s*function\\s*\\(",
+      "tests":[
          "test = function()"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "lua",
-      "regex",
-      "\\b.+\\.JJJ\\s*=\\s*function\\s*\\(",
-      "tests",
-      [  
+      "language":"lua",
+      "regex":"\\b.+\\.JJJ\\s*=\\s*function\\s*\\(",
+      "tests":[
          "MyClass.test = function()"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "\\blet\\s+(\\([^=\\n]*)?(mut +)?JJJ([^=\\n]*\\))?(:\\s*[^=\\n]+)?\\s*=\\s*[^=\\n]+",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"\\blet\\s+(\\([^=\\n]*)?(mut +)?JJJ([^=\\n]*\\))?(:\\s*[^=\\n]+)?\\s*=\\s*[^=\\n]+",
+      "tests":[
          "let test = 1234;",
          "let test: u32 = 1234;",
          "let test: Vec<u32> = Vec::new();",
@@ -1860,79 +1470,63 @@
          "let (a, mut test, mut b) = (1, 2, 3);",
          "let (mut a, mut test): (u32, usize) = (1, 2);"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "\\bconst\\s+JJJ:\\s*[^=\\n]+\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"\\bconst\\s+JJJ:\\s*[^=\\n]+\\s*=[^=\\n]+",
+      "tests":[
          "const test: u32 = 1234;"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "\\bstatic\\s+(mut\\s+)?JJJ:\\s*[^=\\n]+\\s*=[^=\\n]+",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"\\bstatic\\s+(mut\\s+)?JJJ:\\s*[^=\\n]+\\s*=[^=\\n]+",
+      "tests":[
          "static test: u32 = 1234;",
          "static mut test: u32 = 1234;"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "\\bfn\\s+.+\\s*\\((.+,\\s+)?JJJ:\\s*[^=\\n]+\\s*(,\\s*.+)*\\)",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"\\bfn\\s+.+\\s*\\((.+,\\s+)?JJJ:\\s*[^=\\n]+\\s*(,\\s*.+)*\\)",
+      "tests":[
          "fn abc(test: u32) -> u32 {",
          "fn abc(x: u32, y: u32, test: Vec<u32>, z: Vec<Foo>)",
          "fn abc(x: u32, y: u32, test: &mut Vec<u32>, z: Vec<Foo>)"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "(if|while)\\s+let\\s+([^=\\n]+)?(mut\\s+)?JJJ([^=\\n\\(]+)?\\s*=\\s*[^=\\n]+",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"(if|while)\\s+let\\s+([^=\\n]+)?(mut\\s+)?JJJ([^=\\n\\(]+)?\\s*=\\s*[^=\\n]+",
+      "tests":[
          "if let Some(test) = abc() {",
          "if let Some(mut test) = abc() {",
          "if let Ok(test) = abc() {",
@@ -1946,195 +1540,156 @@
          "while let Ok(test) = abc() {",
          "while let Ok(mut test) = abc() {"
       ],
-      "not",
-      [  
+      "not":[
          "while let test(foo) = abc() {"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "struct\\s+[^\\n{]+[{][^}]*(\\s*JJJ\\s*:\\s*[^\\n},]+)[^}]*}",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"struct\\s+[^\\n{]+[{][^}]*(\\s*JJJ\\s*:\\s*[^\\n},]+)[^}]*}",
+      "tests":[
          "struct Foo { abc: u32, test: Vec<String>, b: PathBuf }",
          "struct Foo<T>{test:Vec<T>}",
          "struct FooBar<'a> { test: Vec<String> }"
       ],
-      "not",
-      [  
+      "not":[
          "struct Foo { abc: u32, b: Vec<String> }",
          "/// ... construct the equivalent ...\nfn abc() {\n"
       ]
-   ],
-   "type":[  
-      "variable",
-      "supports",
-      [  
+   },
+   {
+      "type":"variable",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "enum\\s+[^\\n{]+\\s*[{][^}]*\\bJJJ\\b[^}]*}",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"enum\\s+[^\\n{]+\\s*[{][^}]*\\bJJJ\\b[^}]*}",
+      "tests":[
          "enum Foo { VariantA, test, VariantB(u32) }",
          "enum Foo<T> { test(T) }",
          "enum BadStyle{test}",
          "enum Foo32 { Bar, testing, test(u8) }"
       ],
-      "not",
-      [  
+      "not":[
          "enum Foo { testing }"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "\\bfn\\s+JJJ\\s*\\(",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"\\bfn\\s+JJJ\\s*\\(",
+      "tests":[
          "fn test(asdf: u32)",
          "fn test()",
          "pub fn test()"
       ]
-   ],
-   "type":[  
-      "function",
-      "supports",
-      [  
+   },
+   {
+      "type":"function",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "\\bmacro_rules!\\s+JJJ",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"\\bmacro_rules!\\s+JJJ",
+      "tests":[
          "macro_rules! test"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "struct\\s+JJJ\\s*[{\\(]?",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"struct\\s+JJJ\\s*[{\\(]?",
+      "tests":[
          "struct test(u32, u32)",
          "struct test;",
          "struct test { abc: u32, def: Vec<String> }"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "trait\\s+JJJ\\s*[{]?",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"trait\\s+JJJ\\s*[{]?",
+      "tests":[
          "trait test;",
          "trait test { fn abc() -> u32; }"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "\\btype\\s+JJJ([^=\\n]+)?\\s*=[^=\\n]+;",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"\\btype\\s+JJJ([^=\\n]+)?\\s*=[^=\\n]+;",
+      "tests":[
          "type test<T> = Rc<RefCell<T>>;",
          "type test = Arc<RwLock<Vec<u32>>>;"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "impl\\s+((\\w+::)*\\w+\\s+for\\s+)?(\\w+::)*JJJ\\s+[{]?",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"impl\\s+((\\w+::)*\\w+\\s+for\\s+)?(\\w+::)*JJJ\\s+[{]?",
+      "tests":[
          "impl test {",
          "impl abc::test {",
          "impl std::io::Read for test {",
          "impl std::io::Read for abc::test {"
       ]
-   ],
-   "type":[  
-      "type",
-      "supports",
-      [  
+   },
+   {
+      "type":"type",
+      "supports":[
          "ag",
          "grep",
          "rg",
          "git-grep"
       ],
-      "language",
-      "rust",
-      "regex",
-      "mod\\s+JJJ\\s*[{]?",
-      "tests",
-      [  
+      "language":"rust",
+      "regex":"mod\\s+JJJ\\s*[{]?",
+      "tests":[
          "mod test;",
          "pub mod test {"
       ]
-   ]
-}
+   }
+]
