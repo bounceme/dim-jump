@@ -35,7 +35,7 @@ function s:Grep(searcher,regparts,token)
   let grepr = &grepprg
   let &grepprg = escape(a:searcher
         \ . substitute(s:searchprg[a:searcher].opts
-        \ . (len(a:regparts) ? shellescape(join(a:regparts,'|')) : "'JJJ'")
+        \ . shellescape(len(a:regparts) ? join(a:regparts,'|') : 'JJJ')
         \ , 'JJJ','$*','g'), '|')
   exe 'grep ' . a:token
   let &grepprg = grepr
