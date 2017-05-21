@@ -7,9 +7,13 @@ try
   let s:defs = json_decode(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
 catch
   try
-    sandbox let s:defs = eval(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
+    let s:strdefs = join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json'))
+    sandbox let s:defs = eval(s:strdefs)
   catch
+    unlet! s:defs
     finish
+  finally
+    unlet! s:strdefs
   endtry
 endtry
 
