@@ -28,24 +28,6 @@ function s:prune(kw)
   return a:kw
 endfunction
 
-" https://gist.github.com/bounceme/72aa91b4f2a473818d93384b7fff3bd4
-function s:FilterQf(ob)
-  let [cc,bnr] = [[],bufnr('%')]
-  let shm = &shortmess
-  set shortmess+=A
-  for i in a:ob
-    silent! exe 'hide keepalt keepjumps b ' . get(i,'bufnr')
-    let [ln,cl] = [get(i,'lnum'),get(i,'col')]
-    if synIDattr(synID(ln, cl ? cl : matchend(getline(ln),'^\s*\S'),0),'name')
-          \ !~? 'string\|regex\|comment'
-      call add(cc,deepcopy(i))
-    endif
-  endfor
-  silent! exe 'keepalt keepjumps b ' . bnr
-  let &shm = shm
-  return cc
-endfunction
-
 let s:preferred = 'rg'
 let s:searchprg  = {'rg': {'opts': ' --color never --no-heading '}}
 
