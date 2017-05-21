@@ -1,2 +1,2 @@
 # dim-jump
-dumb-jump.el ported to vim
+[dumb-jump.el](https://github.com/jacktasia/dumb-jump)
