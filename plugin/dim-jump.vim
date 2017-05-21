@@ -3,7 +3,10 @@ if exists('g:loaded_dimjump') || !exists('*json_decode')
 endif
 let g:loaded_dimjump = 1
 
-let s:transforms = {}
+let s:transforms = {
+      \ 'clojure': 'substitute(JJJ,".*/","","")',
+      \ 'ruby': 'substitute(JJJ,"^:","","")'
+      \ }
 function s:prune(kw)
   if has_key(s:transforms,&ft)
     return eval(substitute(s:transforms[&ft],'JJJ',string(a:kw),'g'))
