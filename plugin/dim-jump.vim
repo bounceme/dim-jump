@@ -1,4 +1,4 @@
-if exists('g:loaded_dimjump') || !exists('*json_decode')
+if exists('g:loaded_dimjump')
   finish
 endif
 let g:loaded_dimjump = 1
@@ -32,7 +32,12 @@ function s:FilterQf(ob)
   return cc
 endfunction
 
+try
 let s:defs = json_decode(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
+catch
+let s:defs = eval(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
+endtry
+
 function s:GotoDefCword()
   if !exists('b:dim_jump_lang')
     let b:dim_jump_lang = filter(s:defs,'v:val.language ==? &ft')
