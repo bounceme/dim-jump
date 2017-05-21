@@ -3,6 +3,16 @@ if exists('g:loaded_dimjump')
 endif
 let g:loaded_dimjump = 1
 
+try
+  let s:defs = json_decode(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
+catch
+  try
+    sandbox let s:defs = eval(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
+  catch
+    finish
+  endtry
+endtry
+
 let s:transforms = {
       \ 'clojure': 'substitute(JJJ,".*/","","")',
       \ 'ruby': 'substitute(JJJ,"^:","","")'
@@ -31,12 +41,6 @@ function s:FilterQf(ob)
   let &shm = shm
   return cc
 endfunction
-
-try
-let s:defs = json_decode(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
-catch
-let s:defs = eval(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
-endtry
 
 function s:GotoDefCword()
   if !exists('b:dim_jump_lang')
