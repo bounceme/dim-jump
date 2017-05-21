@@ -29,7 +29,7 @@ function s:prune(kw)
 endfunction
 
 let s:preferred = 'rg'
-let s:searchprg  = {'rg': {'opts': ' --color never --no-heading '}}
+let s:searchprg  = {'rg': {'opts': ' --color never --no-heading --type %:e '}}
 
 function s:Grep(searcher,regparts,token)
   let grepr = &grepprg
