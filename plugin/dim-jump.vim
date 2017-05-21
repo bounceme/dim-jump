@@ -46,13 +46,29 @@ function s:FilterQf(ob)
   return cc
 endfunction
 
+let s:preferred = 'rg'
+let s:searchprg  = {'rg': {'opts': ' --color never --no-heading '}}
+
+function s:Grep(searcher,regparts,token)
+  let grepr = &grepprg
+  let &grepprg = escape(a:searcher
+        \ . substitute(s:searchprg[a:searcher].opts
+        \ . shellescape(join(a:regparts,'|')), 'JJJ','$*','g'), '|')
+  exe 'grep ' . a:token
+  let &grepprg = grepr
+endfunction
+
 function s:GotoDefCword()
   if !exists('b:dim_jump_lang')
-    let b:dim_jump_lang = filter(s:defs,'v:val.language ==? &ft')
+    let b:dim_jump_lang = filter(deepcopy(s:defs),'v:val.language ==? &ft')
   endif
-  let token = s:prune(expand('<cword>'))
-  echom string(b:dim_jump_lang)
-  echom token
+  let patterns = []
+  for d in b:dim_jump_lang
+    if index(d.supports,s:preferred) != -1
+      call add(patterns,d.regex)
+    endif
+  endfor
+  call s:Grep(s:preferred,patterns,s:prune(expand('<cword>')))
 endfunction
 
 command DimJumpPos call <SID>GotoDefCword()
