@@ -3,7 +3,7 @@ if exists('g:loaded_dimjump')
 endif
 let g:loaded_dimjump = 1
 
-if get(g:,'preferred_searcher') is 0
+if get(g:,'preferred_searcher') is 0 || g:preferred_searcher !~# '^\%(ag\|rg\|grep\)$'
   if executable('ag')
     let g:preferred_searcher = 'ag'
   elseif executable('rg')
