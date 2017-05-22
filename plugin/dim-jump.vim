@@ -62,6 +62,8 @@ function s:Grep(searcher,regparts,token)
       else
         let args = substitute(args,'\\j','($|[^\\w-])','g')
       endif
+    else
+      let args = substitute(args,'\\j','\\b','g')
     endif
   endif
   let &grepprg = escape(a:searcher
