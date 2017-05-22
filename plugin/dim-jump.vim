@@ -29,13 +29,32 @@ function s:prune(kw)
 endfunction
 
 let s:preferred = 'rg'
-let s:searchprg  = {'rg': {'opts': ' --color never --no-heading --type %:e '}}
+let s:searchprg  = {
+      \ 'rg': {'opts': ' --color never --no-heading --type %:e '},
+      \ 'grep': {'opts': ' -r '},
+      \ 'ag': {'opts': ' --nocolor --nogroup --%:e '}
+      \ }
 
 function s:Grep(searcher,regparts,token)
   let grepr = &grepprg
+  let args = ''
+  if len(a:regparts)
+    if a:searcher ==# 'grep'
+      let args = '-E -e '.join(map(a:regparts,'shellescape(v:val)'),' -e ')
+    else
+      let args = shellescape(join(a:regparts,'|'))
+    endif
+    if &isk =~ '\%(^\|,\)-'
+      if a:searcher ==# 'ag'
+        let args = substitute(args,'\\j','(?!|[^\\w-])','g')
+      else
+        let args = substitute(args,'\\j','($|[^\\w-])','g')
+      endif
+    endif
+  endif
   let &grepprg = escape(a:searcher
         \ . substitute(s:searchprg[a:searcher].opts
-        \ . shellescape(len(a:regparts) ? join(a:regparts,'|') : 'JJJ')
+        \ . args
         \ , 'JJJ','$*','g'), '|')
   exe 'grep ' . a:token
   let &grepprg = grepr
