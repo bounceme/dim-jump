@@ -3,6 +3,18 @@ if exists('g:loaded_dimjump')
 endif
 let g:loaded_dimjump = 1
 
+if get(g:,'preferred_searcher') is 0
+  if executable('ag')
+    let g:preferred_searcher = 'ag'
+  elseif executable('rg')
+    let g:preferred_searcher = 'rg'
+  elseif executable('grep')
+    let g:preferred_searcher = 'grep'
+  else
+    finish
+  endif
+endif
+
 try
   let s:defs = json_decode(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
 catch
@@ -16,19 +28,6 @@ catch
     unlet! s:strdefs
   endtry
 endtry
-
-let g:preferred_searcher = get(g:,'preferred_searcher')
-if g:preferred_searcher is 0
-  if executable('ag')
-    let g:preferred_searcher = 'ag'
-  elseif executable('rg')
-    let g:preferred_searcher = 'rg'
-  elseif executable('grep')
-    let g:preferred_searcher = 'grep'
-  else
-    finish
-  endif
-endif
 
 let s:transforms = {
       \ 'clojure': 'substitute(JJJ,".*/","","")',
