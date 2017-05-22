@@ -17,6 +17,17 @@ catch
   endtry
 endtry
 
+let g:preferred_searcher = get(g:,'preferred_searcher')
+if g:preferred_searcher is 0
+  if executable('ag')
+    let g:preferred_searcher = 'ag'
+  elseif executable('rg')
+    let g:preferred_searcher = 'rg'
+  elseif executable('grep')
+    let executable = 'grep'
+  endif
+endif
+
 let s:transforms = {
       \ 'clojure': 'substitute(JJJ,".*/","","")',
       \ 'ruby': 'substitute(JJJ,"^:","","")'
@@ -28,15 +39,15 @@ function s:prune(kw)
   return a:kw
 endfunction
 
-let s:preferred = 'grep'
 let s:searchprg  = {
-      \ 'rg': {'opts': ' --color never --no-heading --type %:e '},
-      \ 'grep': {'opts': ' -rnH --include=*.%:e '},
-      \ 'ag': {'opts': ' --nocolor --nogroup --%:e '}
+      \ 'rg': {'opts': ' --color never --vimgrep -g ''*.%:e'' '},
+      \ 'grep': {'opts': ' -rnH --color=never --include=*.%:e '},
+      \ 'ag': {'opts': ' --nocolor --vimgrep -G ''.*\.%:e$'' '}
       \ }
 
 function s:Grep(searcher,regparts,token)
-  let grepr = &grepprg
+  let [grepr, grepf] = [&grepprg, &grepformat]
+  set grepformat&vim
   let args = ''
   if len(a:regparts)
     if a:searcher ==# 'grep'
@@ -57,7 +68,7 @@ function s:Grep(searcher,regparts,token)
         \ . args
         \ , 'JJJ','$*','g'), '|')
   exe 'silent! grep ' . a:token | redraw!
-  let &grepprg = grepr
+  let [&grepprg, &grepformat] = [grepr, grepf]
 endfunction
 
 function s:GotoDefCword()
@@ -66,11 +77,11 @@ function s:GotoDefCword()
   endif
   let patterns = []
   for d in b:dim_jump_lang
-    if index(d.supports,s:preferred) != -1
+    if index(d.supports,g:preferred_searcher) != -1
       call add(patterns,d.regex)
     endif
   endfor
-  call s:Grep(s:preferred,patterns,s:prune(expand('<cword>')))
+  call s:Grep(g:preferred_searcher, patterns, s:prune(expand('<cword>')))
 endfunction
 
 command DimJumpPos call <SID>GotoDefCword()
