@@ -28,10 +28,10 @@ function s:prune(kw)
   return a:kw
 endfunction
 
-let s:preferred = 'rg'
+let s:preferred = 'grep'
 let s:searchprg  = {
       \ 'rg': {'opts': ' --color never --no-heading --type %:e '},
-      \ 'grep': {'opts': ' -r '},
+      \ 'grep': {'opts': ' -rnH --include=*.%:e '},
       \ 'ag': {'opts': ' --nocolor --nogroup --%:e '}
       \ }
 
