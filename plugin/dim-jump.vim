@@ -42,7 +42,7 @@ endfunction
 
 let s:searchprg  = {
       \ 'rg': {'opts': ' --color never --vimgrep -g ''*.%:e'' '},
-      \ 'grep': {'opts': ' -rnH --color=never --include=*.%:e '},
+      \ 'grep': {'opts': ' -rnH --color=never --include=''*.%:e'' '},
       \ 'ag': {'opts': ' --nocolor --vimgrep -G ''.*\.%:e$'' '}
       \ }
 
