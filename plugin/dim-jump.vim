@@ -15,6 +15,8 @@ if get(g:,'preferred_searcher') is 0 || g:preferred_searcher !~# '^\%([ar]g\|gre
   endif
 endif
 
+let s:timeout = executable('timeout') ? 'timeout 5 ' : executable('gtimeout') ? 'gtimeout 5 ' : ''
+
 try
   let s:defs = json_decode(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
 catch
@@ -66,7 +68,7 @@ function s:Grep(searcher,regparts,token)
       let args = substitute(args,'\C\\j','\\b','g')
     endif
   endif
-  let grepcmd = a:searcher
+  let grepcmd = s:timeout . a:searcher
         \ . substitute(substitute(s:searchprg[a:searcher]['opts']
         \ , '\C%:e', '\=expand(submatch(0))', 'g')
         \ . args
