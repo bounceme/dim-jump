@@ -56,7 +56,7 @@ function s:Grep(searcher,regparts,token)
         \ . substitute(s:searchprg[a:searcher].opts
         \ . args
         \ , 'JJJ','$*','g'), '|')
-  exe 'grep ' . a:token
+  exe 'silent! grep ' . a:token | redraw!
   let &grepprg = grepr
 endfunction
 
