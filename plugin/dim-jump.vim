@@ -30,8 +30,8 @@ catch
 endtry
 
 let s:transforms = {
-      \ 'clojure': 'substitute(JJJ,"\\C.*/","","")',
-      \ 'ruby': 'substitute(JJJ,"\\C^:","","")'
+      \ 'clojure': 'substitute(JJJ,".*/","","")',
+      \ 'ruby': 'substitute(JJJ,"^:","","")'
       \ }
 function s:prune(kw)
   if has_key(s:transforms,&ft)
@@ -49,7 +49,7 @@ let s:searchprg  = {
 function s:Grep(searcher,regparts,token)
   let grepf = &errorformat
   set errorformat&vim
-  let args = ''
+  let args = 'JJJ'
   if len(a:regparts)
     if a:searcher ==# 'grep'
       let args = '-E -e '.join(map(a:regparts,'shellescape(v:val)'),' -e ')
