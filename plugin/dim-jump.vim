@@ -41,14 +41,14 @@ function s:prune(kw)
 endfunction
 
 let s:searchprg  = {
-      \ 'rg': {'opts': ' --color never --vimgrep -g ''*.%:e'' '},
-      \ 'grep': {'opts': ' -rnH --color=never --include=''*.%:e'' '},
-      \ 'ag': {'opts': ' --nocolor --vimgrep -G ''.*\.%:e$'' '}
+      \ 'rg': {'opts': ' --no-messages --color never --vimgrep -g ''*.%:e'' '},
+      \ 'grep': {'opts': ' --no-messages -rnH --color=never --include=''*.%:e'' '},
+      \ 'ag': {'opts': ' --silent --nocolor --vimgrep -G ''.*\.%:e$'' '}
       \ }
 
 function s:Grep(searcher,regparts,token)
-  let [grepr, grepf] = [&grepprg, &grepformat]
-  set grepformat&vim
+  let grepf = &errorformat
+  set errorformat&vim
   let args = ''
   if len(a:regparts)
     if a:searcher ==# 'grep'
@@ -66,12 +66,13 @@ function s:Grep(searcher,regparts,token)
       let args = substitute(args,'\\j','\\b','g')
     endif
   endif
-  let &grepprg = escape(a:searcher
-        \ . substitute(s:searchprg[a:searcher].opts
+  let grepcmd = a:searcher
+        \ . substitute(substitute(s:searchprg[a:searcher]['opts']
+        \ , '%:e', '\=expand(submatch(0))', 'g')
         \ . args
-        \ , 'JJJ','$*','g'), '|')
-  exe 'silent! grep ' . a:token | redraw!
-  let [&grepprg, &grepformat] = [grepr, grepf]
+        \ , 'JJJ', a:token, 'g')
+  silent! cexpr system(grepcmd)
+  let &errorformat = grepf
 endfunction
 
 function s:GotoDefCword()
