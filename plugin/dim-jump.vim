@@ -30,12 +30,12 @@ catch
 endtry
 
 let s:transforms = {
-      \ 'clojure': 'substitute(JJJ,".*/","","")',
-      \ 'ruby': 'substitute(JJJ,"^:","","")'
+      \ 'clojure': 'substitute(JJJ,"\\C.*/","","")',
+      \ 'ruby': 'substitute(JJJ,"\\C^:","","")'
       \ }
 function s:prune(kw)
   if has_key(s:transforms,&ft)
-    return eval(substitute(s:transforms[&ft],'JJJ',string(a:kw),'g'))
+    return eval(substitute(s:transforms[&ft],'\CJJJ',string(a:kw),'g'))
   endif
   return a:kw
 endfunction
@@ -58,19 +58,19 @@ function s:Grep(searcher,regparts,token)
     endif
     if &isk =~ '\%(^\|,\)-'
       if a:searcher ==# 'ag'
-        let args = substitute(args,'\\j','(?!|[^\\w-])','g')
+        let args = substitute(args,'\C\\j','(?!|[^\\w-])','g')
       else
-        let args = substitute(args,'\\j','($|[^\\w-])','g')
+        let args = substitute(args,'\C\\j','($|[^\\w-])','g')
       endif
     else
-      let args = substitute(args,'\\j','\\b','g')
+      let args = substitute(args,'\C\\j','\\b','g')
     endif
   endif
   let grepcmd = a:searcher
         \ . substitute(substitute(s:searchprg[a:searcher]['opts']
-        \ , '%:e', '\=expand(submatch(0))', 'g')
+        \ , '\C%:e', '\=expand(submatch(0))', 'g')
         \ . args
-        \ , 'JJJ', a:token, 'g')
+        \ , '\CJJJ', a:token, 'g')
   silent! cexpr system(grepcmd)
   let &errorformat = grepf
 endfunction
