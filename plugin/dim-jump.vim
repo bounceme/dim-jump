@@ -49,7 +49,7 @@ let s:searchprg  = {
 function s:Grep(searcher,regparts,token)
   let grepf = &errorformat
   set errorformat&vim
-  let args = 'JJJ'
+  let args = "'\\bJJJ\\b'"
   if len(a:regparts)
     if a:searcher ==# 'grep'
       let args = '-E -e '.join(map(a:regparts,'shellescape(v:val)'),' -e ')
