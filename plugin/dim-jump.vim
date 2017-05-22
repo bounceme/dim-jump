@@ -25,6 +25,8 @@ if g:preferred_searcher is 0
     let g:preferred_searcher = 'rg'
   elseif executable('grep')
     let g:preferred_searcher = 'grep'
+  else
+    finish
   endif
 endif
 
