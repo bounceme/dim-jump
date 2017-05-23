@@ -12,6 +12,9 @@ if get(g:,'preferred_searcher') is 0 || g:preferred_searcher !~# '^\%([ar]g\|\%(
     let g:preferred_searcher = 'rg'
   elseif executable('grep')
     let g:preferred_searcher = 'grep'
+    if systemlist('grep --version')[0] =~# 'GNU'
+      let s:gnu = 1
+    endif
   else
     finish
   endif
@@ -61,6 +64,9 @@ function s:Grep(searcher,regparts,token)
         let args = shellescape(join(a:regparts,'|'))
       else
         let args = join(map(a:regparts,'shellescape(v:val)'),' -e ')
+        if exists('s:gnu')
+          let args = substitute(args,'\C\\s','[[:space:]]','g')
+        endif
       endif
     else
       let args = shellescape(join(a:regparts,'|'))
