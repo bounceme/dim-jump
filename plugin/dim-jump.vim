@@ -36,6 +36,8 @@ catch
   endtry
 endtry
 
+call filter(s:defs,'filter(v:val,''v:key !~# "\\v^%(tests|not)$"'').language !=? "elisp"')
+
 let s:transforms = {
       \ 'clojure': 'substitute(JJJ,".*/","","")',
       \ 'ruby': 'substitute(JJJ,"^:","","")'
