@@ -65,7 +65,7 @@ function s:Grep(searcher,regparts,token)
       if a:searcher =~# 'git'
         let args = shellescape(join(a:regparts,'|'))
       else
-        let args = join(map(a:regparts,'shellescape(v:val)'),' -e ')
+        let args = join(map(deepcopy(a:regparts),'shellescape(v:val)'),' -e ')
         if exists('s:gnu')
           let args = substitute(args,'\C\\s','[[:space:]]','g')
         endif
@@ -97,15 +97,11 @@ endfunction
 
 function s:GotoDefCword()
   if !exists('b:dim_jump_lang')
-    let b:dim_jump_lang = filter(deepcopy(s:defs),'v:val.language ==? &ft')
+    let b:dim_jump_lang = filter(map(deepcopy(s:defs)
+          \ ,'v:val.language ==? &ft && index(v:val.supports, g:preferred_searcher) != -1 ? v:val.regex : ""')
+          \ ,'v:val isnot ""')
   endif
-  let patterns = []
-  for d in b:dim_jump_lang
-    if index(d.supports,g:preferred_searcher) != -1
-      call add(patterns,d.regex)
-    endif
-  endfor
-  call s:Grep(g:preferred_searcher, patterns, s:prune(expand('<cword>')))
+  call s:Grep(g:preferred_searcher, b:dim_jump_lang, s:prune(expand('<cword>')))
 endfunction
 
 command DimJumpPos call <SID>GotoDefCword()
