@@ -3,8 +3,10 @@ if exists('g:loaded_dimjump')
 endif
 let g:loaded_dimjump = 1
 
-if get(g:,'preferred_searcher') is 0 || g:preferred_searcher !~# '^\%([ar]g\|grep\)$'
-  if executable('ag')
+if get(g:,'preferred_searcher') is 0 || g:preferred_searcher !~# '^\%([ar]g\|\%(git-)\=grep\)$'
+  if executable('git') && system('git rev-parse --is-inside-work-tree')[:-2] ==# 'true'
+    let g:preferred_searcher = 'git-grep'
+  elseif executable('ag')
     let g:preferred_searcher = 'ag'
   elseif executable('rg')
     let g:preferred_searcher = 'rg'
@@ -44,7 +46,8 @@ endfunction
 
 let s:searchprg  = {
       \ 'rg': {'opts': ' --no-messages --color never --vimgrep -g ''*.%:e'' '},
-      \ 'grep': {'opts': ' --no-messages -rnH --color=never --include=''*.%:e'' '},
+      \ 'grep': {'opts': ' --no-messages -rnH --color=never --include=''*.%:e'' -E -e '},
+      \ 'git-grep': {'opts': ' --untracked --line-number --no-color -E -e '},
       \ 'ag': {'opts': ' --silent --nocolor --vimgrep -G ''.*\.%:e$'' '}
       \ }
 
@@ -52,9 +55,13 @@ function s:Grep(searcher,regparts,token)
   let grepf = &errorformat
   set errorformat&vim
   let args = "'\\bJJJ\\b'"
-  if len(a:regparts)
-    if a:searcher ==# 'grep'
-      let args = '-E -e '.join(map(a:regparts,'shellescape(v:val)'),' -e ')
+  if !empty(a:regparts)
+    if a:searcher =~# 'grep'
+      if a:searcher =~# 'git'
+        let args = shellescape(join(a:regparts,'|'))
+      else
+        let args = join(map(a:regparts,'shellescape(v:val)'),' -e ')
+      endif
     else
       let args = shellescape(join(a:regparts,'|'))
     endif
@@ -68,7 +75,10 @@ function s:Grep(searcher,regparts,token)
       let args = substitute(args,'\C\\j','\\b','g')
     endif
   endif
-  let grepcmd = s:timeout . a:searcher
+  if a:searcher ==# 'git-grep'
+    let args .= " -- '*.".expand('%:e')."'"
+  endif
+  let grepcmd = s:timeout . tr(a:searcher,'-',' ')
         \ . substitute(substitute(s:searchprg[a:searcher]['opts']
         \ , '\C%:e', '\=expand(submatch(0))', 'g')
         \ . args
