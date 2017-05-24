@@ -50,7 +50,7 @@ function s:prune(kw)
 endfunction
 
 let s:searchprg  = {
-      \ 'rg': {'opts': ' --no-messages --color never --vimgrep -g ''*.%:e'' '},
+      \ 'rg': {'opts': ' --no-messages --color never --vimgrep -g ''*.%:e'' -e '},
       \ 'grep': {'opts': ' --no-messages -rnH --color=never --include=''*.%:e'' -E -e '},
       \ 'git-grep': {'opts': ' --untracked --line-number --no-color -E -e '},
       \ 'ag': {'opts': ' --silent --nocolor --vimgrep -G ''.*\.%:e$'' '}
