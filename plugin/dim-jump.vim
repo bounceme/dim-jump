@@ -99,12 +99,15 @@ endfunction
 
 function s:GotoDefCword()
   call s:prog()
-  if !exists('b:dim_jump_lang')
-    let b:dim_jump_lang = filter(map(deepcopy(s:defs,1)
-          \ ,'v:val.language ==? &ft && index(v:val.supports, g:preferred_searcher) != -1 ? v:val.regex : ""')
-          \ ,'v:val isnot ""')
+  let kw = s:prune(expand('<cword>'))
+  if kw isnot ''
+    if !exists('b:dim_jump_lang')
+      let b:dim_jump_lang = filter(map(deepcopy(s:defs,1)
+            \ ,'v:val.language ==? &ft && index(v:val.supports, g:preferred_searcher) != -1 ? v:val.regex : ""')
+            \ ,'v:val isnot ""')
+    endif
+    call s:Grep(g:preferred_searcher, b:dim_jump_lang, kw)
   endif
-  call s:Grep(g:preferred_searcher, b:dim_jump_lang, s:prune(expand('<cword>')))
 endfunction
 
 command DimJumpPos call <SID>GotoDefCword()
