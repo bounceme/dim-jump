@@ -4,7 +4,7 @@ endif
 let g:loaded_dimjump = 1
 
 function s:prog()
-  if get(g:,'preferred_searcher') is 0 || g:preferred_searcher !~# '^\%([ar]g\|\%(git-\)\=grep\)$'
+  if get(g:,'preferred_searcher') !~# '^\%([ar]g\|\%(git-\)\=grep\)$'
     if system('git rev-parse --is-inside-work-tree')[:-2] ==# 'true'
       let g:preferred_searcher = 'git-grep'
     elseif executable('ag')
