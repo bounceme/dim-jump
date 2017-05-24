@@ -4,7 +4,7 @@ endif
 let g:loaded_dimjump = 1
 
 function s:prog()
-  if get(g:,'preferred_searcher') !~# '^\%([ar]g\|\%(git-\)\=grep\)$'
+  if get(g:,'preferred_searcher') !~# '^\%([ar]g\|grep\)$'
     if system('git rev-parse --is-inside-work-tree')[:-2] ==# 'true'
       let g:preferred_searcher = 'git-grep'
     elseif executable('ag')
@@ -100,7 +100,7 @@ endfunction
 function s:GotoDefCword()
   call s:prog()
   if !exists('b:dim_jump_lang')
-    let b:dim_jump_lang = filter(map(deepcopy(s:defs)
+    let b:dim_jump_lang = filter(map(deepcopy(s:defs,1)
           \ ,'v:val.language ==? &ft && index(v:val.supports, g:preferred_searcher) != -1 ? v:val.regex : ""')
           \ ,'v:val isnot ""')
   endif
