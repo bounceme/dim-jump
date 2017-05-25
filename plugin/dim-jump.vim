@@ -7,11 +7,14 @@ function s:prog()
   if get(b:,'preferred_searcher') !~# '^\%([ar]g\|\%(git-\)\=grep\)$'
     if system('git rev-parse --is-inside-work-tree')[:-2] ==# 'true'
       let b:preferred_searcher = 'git-grep'
-    elseif executable('ag')
+    elseif exists('s:ag') || executable('ag')
+      let s:ag = 1
       let b:preferred_searcher = 'ag'
-    elseif executable('rg')
+    elseif exists('s:rg') || executable('rg')
+      let s:rg = 1
       let b:preferred_searcher = 'rg'
-    elseif executable('grep')
+    elseif exists('s:grep') || executable('grep')
+      let s:grep = 1
       let b:preferred_searcher = 'grep'
       if !exists('s:gnu')
         let s:gnu = systemlist('grep --version')[0] =~# 'GNU'
