@@ -3,24 +3,23 @@ if exists('g:loaded_dimjump')
 endif
 let g:loaded_dimjump = 1
 
+let [s:ag, s:rg, s:grep] = ['', '', '']
 function s:prog()
   if get(b:,'preferred_searcher') !~# '^\%([ar]g\|\%(git-\)\=grep\)$'
-    if system('git rev-parse --is-inside-work-tree')[:-2] ==# 'true'
-      let b:preferred_searcher = 'git-grep'
-    elseif exists('s:ag') || executable('ag')
-      let s:ag = 1
-      let b:preferred_searcher = 'ag'
-    elseif exists('s:rg') || executable('rg')
-      let s:rg = 1
-      let b:preferred_searcher = 'rg'
-    elseif exists('s:grep') || executable('grep')
-      let s:grep = 1
-      let b:preferred_searcher = 'grep'
-      if !exists('s:gnu')
-        let s:gnu = systemlist('grep --version')[0] =~# 'GNU'
-      endif
-    else
-      throw 'no search program available'
+    let b:git_grep = system('git rev-parse --is-inside-work-tree')[:-2]
+          \ is# 'true' ? 'git-grep' : ''
+    if empty(b:git_grep.s:ag.s:rg.s:grep)
+      for p in ['ag', 'rg', 'grep']
+        if executable(p)
+          let s:{p} = p
+          break
+        endif
+      endfor
+      let s:gnu = systemlist('grep --version')[0] =~# 'GNU'
+    endif
+    let b:preferred_searcher = matchstr([b:git_grep, s:ag, s:rg, s:grep],'.')
+    if empty(b:preferred_searcher)
+      throw 'no search program'
     endif
   endif
 endfunction
