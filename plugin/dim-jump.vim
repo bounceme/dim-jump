@@ -13,7 +13,7 @@ function s:prog()
       let b:preferred_searcher = 'rg'
     elseif executable('grep')
       let b:preferred_searcher = 'grep'
-      if systemlist('grep --version')[0] =~# 'GNU'
+      if !exists('s:gnu') && systemlist('grep --version')[0] =~# 'GNU'
         let s:gnu = 1
       endif
     else
