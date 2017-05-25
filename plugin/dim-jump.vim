@@ -15,6 +15,8 @@ function s:prog()
       let b:preferred_searcher = 'grep'
       if !exists('s:gnu') && systemlist('grep --version')[0] =~# 'GNU'
         let s:gnu = 1
+      else
+        let s:gnu = 0
       endif
     else
       throw 'no search program available'
@@ -68,7 +70,7 @@ function s:Grep(searcher,regparts,token)
         let args = shellescape(join(a:regparts,'|'))
       else
         let args = join(map(deepcopy(a:regparts),'shellescape(v:val)'),' -e ')
-        if exists('s:gnu')
+        if s:gnu
           let args = substitute(args,'\C\\s','[[:space:]]','g')
         endif
       endif
