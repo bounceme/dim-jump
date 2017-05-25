@@ -4,15 +4,15 @@ endif
 let g:loaded_dimjump = 1
 
 function s:prog()
-  if get(g:,'preferred_searcher') !~# '^\%([ar]g\|grep\)$'
+  if get(b:,'preferred_searcher') !~# '^\%([ar]g\|\%(git-\)\=grep\)$'
     if system('git rev-parse --is-inside-work-tree')[:-2] ==# 'true'
-      let g:preferred_searcher = 'git-grep'
+      let b:preferred_searcher = 'git-grep'
     elseif executable('ag')
-      let g:preferred_searcher = 'ag'
+      let b:preferred_searcher = 'ag'
     elseif executable('rg')
-      let g:preferred_searcher = 'rg'
+      let b:preferred_searcher = 'rg'
     elseif executable('grep')
-      let g:preferred_searcher = 'grep'
+      let b:preferred_searcher = 'grep'
       if systemlist('grep --version')[0] =~# 'GNU'
         let s:gnu = 1
       endif
@@ -103,10 +103,10 @@ function s:GotoDefCword()
   if kw isnot ''
     if !exists('b:dim_jump_lang')
       let b:dim_jump_lang = filter(map(deepcopy(s:defs,1)
-            \ ,'v:val.language ==? &ft && index(v:val.supports, g:preferred_searcher) != -1 ? v:val.regex : ""')
+            \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1 ? v:val.regex : ""')
             \ ,'v:val isnot ""')
     endif
-    call s:Grep(g:preferred_searcher, b:dim_jump_lang, kw)
+    call s:Grep(b:preferred_searcher, b:dim_jump_lang, kw)
   endif
 endfunction
 
