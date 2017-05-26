@@ -40,7 +40,7 @@ catch
   endtry
 endtry
 
-call map(s:defs,'filter(v:val,''v:key !~# "\\v^%(tests|not)$"'')')
+call map(s:defs,'filter(v:val,''v:key !~# "^\\%(tests\\|not\\)$"'')')
 
 let s:transforms = {
       \ 'clojure': 'substitute(JJJ,".*/","","")',
@@ -60,21 +60,21 @@ let s:searchprg  = {
       \ 'ag': {'opts': ' --silent --nocolor --vimgrep -G ''.*\.%:e$'' '}
       \ }
 
-function s:Grep(searcher,regparts,token)
+function s:Grep(token)
   let grepf = &errorformat
   set errorformat&vim
   let args = "'\\bJJJ\\b'"
-  if !empty(a:regparts)
-    if a:searcher ==# 'grep'
-      let args = join(map(deepcopy(a:regparts),'shellescape(v:val)'),' -e ')
+  if !empty(b:dim_jump_lang)
+    if b:preferred_searcher ==# 'grep'
+      let args = join(map(deepcopy(b:dim_jump_lang),'shellescape(v:val)'),' -e ')
       if s:gnu
         let args = substitute(args,'\C\\s','[[:space:]]','g')
       endif
     else
-      let args = shellescape(join(a:regparts,'|'))
+      let args = shellescape(join(b:dim_jump_lang,'|'))
     endif
     if &isk =~ '\%(^\|,\)-'
-      if a:searcher ==# 'ag'
+      if b:preferred_searcher ==# 'ag'
         let args = substitute(args,'\C\\j','(?!|[^\\w-])','g')
       else
         let args = substitute(args,'\C\\j','($|[^\\w-])','g')
@@ -83,11 +83,11 @@ function s:Grep(searcher,regparts,token)
       let args = substitute(args,'\C\\j','\\b','g')
     endif
   endif
-  if a:searcher ==# 'git-grep'
+  if b:preferred_searcher ==# 'git-grep'
     let args .= " -- '*.".expand('%:e')."'"
   endif
-  let grepcmd = s:timeout . tr(a:searcher,'-',' ')
-        \ . substitute(substitute(s:searchprg[a:searcher]['opts']
+  let grepcmd = s:timeout . tr(b:preferred_searcher,'-',' ')
+        \ . substitute(substitute(s:searchprg[b:preferred_searcher]['opts']
         \ , '\C%:e', '\=expand(submatch(0))', 'g')
         \ . args
         \ , '\CJJJ', a:token, 'g')
@@ -104,7 +104,7 @@ function s:GotoDefCword()
             \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1 ? v:val.regex : ""')
             \ ,'v:val isnot ""')
     endif
-    call s:Grep(b:preferred_searcher, b:dim_jump_lang, kw)
+    call s:Grep(kw)
   endif
 endfunction
 
