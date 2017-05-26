@@ -65,14 +65,10 @@ function s:Grep(searcher,regparts,token)
   set errorformat&vim
   let args = "'\\bJJJ\\b'"
   if !empty(a:regparts)
-    if a:searcher =~# 'grep'
-      if a:searcher =~# 'git'
-        let args = shellescape(join(a:regparts,'|'))
-      else
-        let args = join(map(deepcopy(a:regparts),'shellescape(v:val)'),' -e ')
-        if s:gnu
-          let args = substitute(args,'\C\\s','[[:space:]]','g')
-        endif
+    if a:searcher ==# 'grep'
+      let args = join(map(deepcopy(a:regparts),'shellescape(v:val)'),' -e ')
+      if s:gnu
+        let args = substitute(args,'\C\\s','[[:space:]]','g')
       endif
     else
       let args = shellescape(join(a:regparts,'|'))
