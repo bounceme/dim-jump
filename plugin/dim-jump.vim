@@ -74,7 +74,7 @@ function s:Grep(token)
     else
       let args = shellescape(join(b:dim_jump_lang,'|'))
     endif
-    if &isk =~ '\%(^\|,\)-'
+    if '-' =~ '\k'
       if b:preferred_searcher ==# 'ag'
         let args = substitute(args,'\C\\j','(?!|[^\\w-])','g')
       else
