@@ -19,29 +19,31 @@ function s:prog()
       endfor
     endif
     let b:preferred_searcher = matchstr([s:ag, s:rg, s:grep],'.')
-    if empty(b:preferred_searcher)
-      throw 'no search program'
-    endif
   endif
 endfunction
 
 let s:timeout = executable('timeout') ? 'timeout 5 ' : executable('gtimeout') ? 'gtimeout 5 ' : ''
 
-try
-  let s:defs = json_decode(join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json')))
-catch
-  try
-    let s:strdefs = join(readfile(fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json'))
-    sandbox let s:defs = eval(s:strdefs)
-  catch
-    unlet! s:defs
-    finish
-  finally
-    unlet! s:strdefs
-  endtry
-endtry
+let s:f = expand('<sfile>:p:h:h')
+function s:loaddefs()
+  if !exists('s:defs')
+    try
+      if exists('*json_decode')
+        let s:defs = json_decode(join(readfile(fnamemodify(s:f,':p').'jump-extern-defs.json')))
+      else
+        let l:strdefs = join(readfile(fnamemodify(s:f,':p').'jump-extern-defs.json'))
+        sandbox let s:defs = eval(l:strdefs)
+        unlet! l:strdefs
+      endif
+    catch
+      unlet! l:strdefs
+      let s:defs = {}
+    endtry
+    call map(s:defs,'filter(v:val,''v:key !~# "^\\%(tests\\|not\\)$"'')')
+  endif
+  return s:defs
+endfunction
 
-call map(s:defs,'filter(v:val,''v:key !~# "^\\%(tests\\|not\\)$"'')')
 
 let s:transforms = {
       \ 'clojure': 'substitute(JJJ,".*/","","")',
@@ -97,13 +99,18 @@ function s:Grep(token)
 endfunction
 
 function s:GotoDefCword()
-  call s:prog()
   let kw = s:prune(expand('<cword>'))
   if kw isnot ''
+    call s:prog()
     if !exists('b:dim_jump_lang')
-      let b:dim_jump_lang = filter(map(deepcopy(s:defs,1)
+      let b:dim_jump_lang = filter(map(deepcopy(s:loaddefs(),1)
             \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1 ? v:val.regex : ""')
             \ ,'v:val isnot ""')
+      if empty(s:defs)
+        echoerr 'no searcher'
+        norm! 1gD
+        return
+      endif
     endif
     call s:Grep(kw)
   endif
