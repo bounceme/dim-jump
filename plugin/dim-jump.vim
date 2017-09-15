@@ -94,7 +94,9 @@ function s:Grep(token)
         \ , '\C%:e', '\=expand(submatch(0))', 'g')
         \ . args
         \ , '\CJJJ', a:token, 'g')
+  let prev = getqflist()
   silent! cexpr system(grepcmd)
+  call setqflist(prev,'r')
   let &errorformat = grepf
 endfunction
 
