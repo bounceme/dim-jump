@@ -109,7 +109,6 @@ function s:GotoDefCword()
             \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1 ? v:val.regex : ""')
             \ ,'v:val isnot ""')
       if empty(s:defs)
-        echoerr 'no searcher'
         norm! 1gD
         return
       endif
