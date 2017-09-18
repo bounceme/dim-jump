@@ -99,7 +99,7 @@ function s:Grep(token)
     return
   endif
   if b:preferred_searcher ==# 'grep'
-    let args = join(map(args,'shellescape(v:val.regex)'),' -e ')
+    let args = join(map(args,'shellescape(v:val)'),' -e ')
     if s:gnu
       let args = substitute(args,'\C\\s','[[:space:]]','g')
     endif
