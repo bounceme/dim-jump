@@ -52,13 +52,11 @@ function s:Refine()
   endif
   let bef = searchpos('\m\S\_s*\<','cnbW')
   let end = searchpos('\m\>\_s*\zs\S','nW')
-  for ic in b:dim_jump_lang
-    for c in con
-      let whole = getline(end[0])[end[1]-1] . getline(bef[0])[bef[1]-1]
-      if c.type ==? ic.type && whole =~# join(filter([get(c,'left',''),get(c,'right','')],'len(v:val)'),'\|')
-        call add(type,c.type)
-      endif
-    endfor
+  for c in con
+    let whole = getline(end[0])[end[1]-1] . getline(bef[0])[bef[1]-1]
+    if whole =~# join(filter([get(c,'left',''),get(c,'right','')],'len(v:val)'),'\|')
+      call add(type,c.type)
+    endif
   endfor
   return filter(copy(b:dim_jump_lang),'count(type,v:val.type)')
 endfunction
