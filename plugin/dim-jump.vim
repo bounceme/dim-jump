@@ -44,6 +44,35 @@ function s:loaddefs()
   return s:defs
 endfunction
 
+function s:Refine()
+  let type = []
+  let con = filter(deepcopy(s:contexts), 'v:val.language ==? &ft')
+  if !len(con)
+    return copy(b:dim_jump_lang)
+  endif
+  let bef = searchpos('\m\S\_s*\<','cnbW')
+  let end = searchpos('\m\>\_s*\zs\S','nW')
+  for ic in b:dim_jump_lang
+    for c in con
+      let whole = getline(end[0])[end[1]-1] . getline(bef[0])[bef[1]-1]
+      if c.type ==? ic.type && whole =~# join(filter([get(c,'left',''),get(c,'right','')],'len(v:val)'),'\|')
+        call add(type,c.type)
+      endif
+    endfor
+  endfor
+  return filter(copy(b:dim_jump_lang),'count(type,v:val.type)')
+endfunction
+
+let s:contexts = [
+      \ {"language": "javascript","type": "function","right": "^("},
+      \ {"language": "javascript","type": "variable","left": "($"},
+      \ {"language": "javascript","type": "variable","right": "^)","left": "($"},
+      \ {"language": "javascript","type": "variable","right": "^\\."},
+      \ {"language": "javascript","type": "variable","right": "^;"},
+      \ {"language": "perl","type": "function","right": "^("},
+      \ {"language": "elisp","type": "function","left": "($"},
+      \ {"language": "elisp","type": "variable","right": "^)"}
+      \ ]
 
 let s:transforms = {
       \ 'clojure': 'substitute(JJJ,".*/","","")',
@@ -68,13 +97,14 @@ function s:Grep(token)
   set errorformat&vim
   let args = "'\\bJJJ\\b'"
   if !empty(b:dim_jump_lang)
+    let args = map(s:Refine(),'v:val.regex')
     if b:preferred_searcher ==# 'grep'
-      let args = join(map(deepcopy(b:dim_jump_lang),'shellescape(v:val)'),' -e ')
+      let args = join(map(args,'shellescape(v:val.regex)'),' -e ')
       if s:gnu
         let args = substitute(args,'\C\\s','[[:space:]]','g')
       endif
     else
-      let args = shellescape(join(b:dim_jump_lang,'|'))
+      let args = shellescape(join(args,'|'))
     endif
     if '-' =~ '\k'
       if b:preferred_searcher ==# 'ag'
@@ -105,9 +135,8 @@ function s:GotoDefCword()
   if kw isnot ''
     call s:prog()
     if !exists('b:dim_jump_lang')
-      let b:dim_jump_lang = filter(map(deepcopy(s:loaddefs(),1)
-            \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1 ? v:val.regex : ""')
-            \ ,'v:val isnot ""')
+      let b:dim_jump_lang = filter(deepcopy(s:loaddefs(),1)
+            \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1')
       if empty(s:defs)
         norm! 1gD
         return
