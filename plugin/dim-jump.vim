@@ -37,7 +37,7 @@ function s:loaddefs()
       endif
     catch
       unlet! l:strdefs
-      let s:defs = {}
+      let s:defs = []
     endtry
     call map(s:defs,'filter(v:val,''v:key !~# "^\\%(tests\\|not\\)$"'')')
   endif
