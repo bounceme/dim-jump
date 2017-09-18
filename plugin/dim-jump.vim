@@ -137,7 +137,7 @@ function s:GotoDefCword()
             \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1')
     endif
     if empty(b:dim_jump_lang)
-      norm! 1gD
+      norm! gD
     else
       call s:Grep(kw)
     endif
