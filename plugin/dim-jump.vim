@@ -94,9 +94,11 @@ function s:Grep(token)
   let grepf = &errorformat
   set errorformat&vim
   let args = "'\\bJJJ\\b'"
-  if !empty(b:dim_jump_lang)
+  if b:dim_jump_lang != []
     let args = map(s:Refine(),'v:val.regex')
-    if b:preferred_searcher ==# 'grep'
+    if args == []
+      let args = "'\\bJJJ\\b'"
+    elseif b:preferred_searcher ==# 'grep'
       let args = join(map(args,'shellescape(v:val.regex)'),' -e ')
       if s:gnu
         let args = substitute(args,'\C\\s','[[:space:]]','g')
