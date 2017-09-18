@@ -94,17 +94,15 @@ function s:Grep(token)
   let grepf = &errorformat
   set errorformat&vim
   let args = "'\\bJJJ\\b'"
-  if b:dim_jump_lang != []
-    let args = map(s:Refine(),'v:val.regex')
-    if args == []
-      let args = "'\\bJJJ\\b'"
-    elseif b:preferred_searcher ==# 'grep'
-      let args = join(map(args,'shellescape(v:val.regex)'),' -e ')
+  let argv = map(s:Refine(),'v:val.regex')
+  if argv != []
+    if b:preferred_searcher ==# 'grep'
+      let args = join(map(argv,'shellescape(v:val.regex)'),' -e ')
       if s:gnu
-        let args = substitute(args,'\C\\s','[[:space:]]','g')
+        let args = substitute(argv,'\C\\s','[[:space:]]','g')
       endif
     else
-      let args = shellescape(join(args,'|'))
+      let args = shellescape(join(argv,'|'))
     endif
     if '-' =~ '\k'
       if b:preferred_searcher ==# 'ag'
@@ -137,12 +135,12 @@ function s:GotoDefCword()
     if !exists('b:dim_jump_lang')
       let b:dim_jump_lang = filter(deepcopy(s:loaddefs(),1)
             \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1')
-      if empty(s:defs)
-        norm! 1gD
-        return
-      endif
     endif
-    call s:Grep(kw)
+    if empty(b:dim_jump_lang)
+      norm! 1gD
+    else
+      call s:Grep(kw)
+    endif
   endif
 endfunction
 
