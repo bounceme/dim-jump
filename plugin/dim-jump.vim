@@ -93,26 +93,26 @@ let s:searchprg  = {
 function s:Grep(token)
   let grepf = &errorformat
   set errorformat&vim
-  let args = "'\\bJJJ\\b'"
-  let argv = map(s:Refine(),'v:val.regex')
-  if argv != []
-    if b:preferred_searcher ==# 'grep'
-      let args = join(map(argv,'shellescape(v:val.regex)'),' -e ')
-      if s:gnu
-        let args = substitute(argv,'\C\\s','[[:space:]]','g')
-      endif
-    else
-      let args = shellescape(join(argv,'|'))
+  let args = map(s:Refine(),'v:val.regex')
+  if args == []
+    exe "norm! [\<C-I>"
+  endif
+  if b:preferred_searcher ==# 'grep'
+    let args = join(map(args,'shellescape(v:val.regex)'),' -e ')
+    if s:gnu
+      let args = substitute(args,'\C\\s','[[:space:]]','g')
     endif
-    if '-' =~ '\k'
-      if b:preferred_searcher ==# 'ag'
-        let args = substitute(args,'\C\\j','(?!|[^\\w-])','g')
-      else
-        let args = substitute(args,'\C\\j','($|[^\\w-])','g')
-      endif
+  else
+    let args = shellescape(join(args,'|'))
+  endif
+  if '-' =~ '\k'
+    if b:preferred_searcher ==# 'ag'
+      let args = substitute(args,'\C\\j','(?!|[^\\w-])','g')
     else
-      let args = substitute(args,'\C\\j','\\b','g')
+      let args = substitute(args,'\C\\j','($|[^\\w-])','g')
     endif
+  else
+    let args = substitute(args,'\C\\j','\\b','g')
   endif
   if b:preferred_searcher ==# 'git-grep'
     let args .= " -- '*.".expand('%:e')."'"
@@ -136,11 +136,7 @@ function s:GotoDefCword()
       let b:dim_jump_lang = filter(deepcopy(s:loaddefs(),1)
             \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1')
     endif
-    if empty(b:dim_jump_lang)
-      exe "norm! [\<C-I>"
-    else
-      call s:Grep(kw)
-    endif
+    call s:Grep(kw)
   endif
 endfunction
 
