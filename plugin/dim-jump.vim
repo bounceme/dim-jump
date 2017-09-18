@@ -91,13 +91,13 @@ let s:searchprg  = {
       \ }
 
 function s:Grep(token)
-  let grepf = &errorformat
-  set errorformat&vim
   let args = map(s:Refine(),'v:val.regex')
   if args == []
     exe "norm! [\<Tab>"
     return
   endif
+  let grepf = &errorformat
+  set errorformat&vim
   if b:preferred_searcher ==# 'grep'
     let args = join(map(args,'shellescape(v:val)'),' -e ')
     if s:gnu
