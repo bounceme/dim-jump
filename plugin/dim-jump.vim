@@ -124,9 +124,22 @@ function s:Grep(token)
         \ . args
         \ , '\CJJJ', a:token, 'g')
   let prev = getqflist()
-  silent! cexpr system(grepcmd)
+  let res = systemlist(grepcmd)
+  call sort(res,function('s:funcsort'))
+  silent! cexpr join(res,"\n")
   call setqflist(prev,'r')
   let &errorformat = grepf
+endfunction
+
+function s:funcsort(a,b)
+  let [aa,bb] = [0,0]
+  if match(a:a,'\V\^'.escape(expand('%'),'\')) != -1
+    let aa = -1
+  endif
+  if match(a:b,'\V\^'.escape(expand('%'),'\')) != -1
+    let bb = 1
+  endif
+  return aa + bb
 endfunction
 
 function s:GotoDefCword()
