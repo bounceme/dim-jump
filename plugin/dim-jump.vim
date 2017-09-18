@@ -95,7 +95,8 @@ function s:Grep(token)
   set errorformat&vim
   let args = map(s:Refine(),'v:val.regex')
   if args == []
-    exe "norm! [\<C-I>"
+    exe "norm! [\<Tab>"
+    return
   endif
   if b:preferred_searcher ==# 'grep'
     let args = join(map(args,'shellescape(v:val.regex)'),' -e ')
