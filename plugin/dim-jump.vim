@@ -126,7 +126,7 @@ function s:Grep(token)
   let prev = getqflist()
   let res = systemlist(grepcmd)
   call sort(res,function('s:funcsort'))
-  silent! cexpr join(res,"\n")
+  silent! cexpr res[0]."\n"
   call setqflist(prev,'r')
   let &errorformat = grepf
 endfunction
