@@ -106,15 +106,8 @@ function s:Grep(token)
   else
     let args = shellescape(join(args,'|'))
   endif
-  if '-' =~ '\k'
-    if b:preferred_searcher ==# 'ag'
-      let args = substitute(args,'\C\\j','(?!|[^\\w-])','g')
-    else
-      let args = substitute(args,'\C\\j','($|[^\\w-])','g')
-    endif
-  else
-    let args = substitute(args,'\C\\j','\\b','g')
-  endif
+  let args = substitute(args,'\C\\j', '-' !~ '\k' ? '\\b' :
+        \ b:preferred_searcher ==# 'ag' ? '(?!|[^\\w-])' : '($|[^\\w-])','g')
   if b:preferred_searcher ==# 'git-grep'
     let args .= " -- '*.".expand('%:e')."'"
   endif
@@ -124,9 +117,7 @@ function s:Grep(token)
         \ . args
         \ , '\CJJJ', a:token, 'g')
   let prev = getqflist()
-  let res = systemlist(grepcmd)
-  call sort(res,function('s:funcsort'))
-  silent! cexpr res[0]."\n"
+  silent! cexpr sort(systemlist(grepcmd),function('s:funcsort'))[0]."\n"
   call setqflist(prev,'r')
   let &errorformat = grepf
 endfunction
