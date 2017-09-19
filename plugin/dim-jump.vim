@@ -93,7 +93,7 @@ let s:searchprg  = {
 function s:Grep(token)
   let args = map(s:Refine(),'v:val.regex')
   if args == []
-    exe "norm! [\<Tab>"
+    silent! exe "norm! [\<Tab>"
     return
   endif
   let grepf = &errorformat
