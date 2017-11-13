@@ -23,15 +23,15 @@ function s:prog()
 endfunction
 
 let s:timeout = executable('timeout') ? 'timeout 5 ' : executable('gtimeout') ? 'gtimeout 5 ' : ''
+let s:f = fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json'
 
-let s:f = expand('<sfile>:p:h:h')
 function s:loaddefs()
   if !exists('s:defs')
     try
       if exists('*json_decode')
-        let s:defs = json_decode(join(readfile(fnamemodify(s:f,':p').'jump-extern-defs.json')))
+        let s:defs = json_decode(join(readfile(s:f)))
       else
-        let l:strdefs = join(readfile(fnamemodify(s:f,':p').'jump-extern-defs.json'))
+        let l:strdefs = join(readfile(s:f))
         sandbox let s:defs = eval(l:strdefs)
         unlet! l:strdefs
       endif
