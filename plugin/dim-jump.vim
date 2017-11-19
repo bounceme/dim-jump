@@ -21,14 +21,17 @@ let s:langmap = [
       \ ['f', 'f77', 'f90', 'f95', 'f03', 'for', 'ftn', 'fpp'],
       \ ]
 
+let s:parallel = !system('{ echo x | xargs -P 2 ; } > /dev/null 2>&1 ; echo $?')
+
 function s:Fileext(f)
-  let fe = matchstr(s:langmap,string(fnamemodify(a:f,':e')))
+  let fe = matchstr(s:langmap, string(fnamemodify(a:f,':e')))
   if fe isnot ''
-    return join(['find',getcwd(),escape(join(
-          \ ['( -iname '.join(map(copy(fe),'string("*.".v:val)'),' -or -iname ')] +
-          \ [')']),'()'),'-print0 | xargs -0'])
+    return join(['find', getcwd(), escape(join(
+          \ ['( -iname '.join(map(copy(fe), 'string("*.".v:val)'), ' -or -iname ')] +
+          \ [')']), '()'), '-print0 | xargs -0'] + (s:parallel ? ['-P 10'] : []))
   endif
-  return 'find '.getcwd().' -iname '.string('*.'.fnamemodify(a:f,':e')).' -print0 | xargs -0'
+  return join(['find', getcwd(), '-iname', string('*.'.fnamemodify(a:f,':e')),
+        \ '-print0 | xargs -0'] + (s:parallel ? ['-P 10'] : []))
 endfunction
 
 let [s:ag, s:rg, s:grep] = ['', '', '']
