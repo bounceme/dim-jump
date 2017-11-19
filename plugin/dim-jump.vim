@@ -3,6 +3,34 @@ if exists('g:loaded_dimjump')
 endif
 let g:loaded_dimjump = 1
 
+let s:langmap = [
+      \ ['dsp', 'lib'],
+      \ ['lisp', 'lsp'],
+      \ ['c', 'h'],
+      \ ['c', 'h', 'tpp', 'cpp', 'hpp', 'cxx', 'hxx', 'cc', 'hh', 'c++', 'h++'],
+      \ ['ex', 'exs', 'eex'],
+      \ ['clj', 'cljc', 'cljs', 'cljx'],
+      \ ['sh', 'bash', 'csh', 'ksh', 'tcsh'],
+      \ ['ml', 'mli', 'mll', 'mly'],
+      \ ['hs', 'lhs'],
+      \ ['php', 'php3', 'php4', 'php5', 'phtml', 'inc'],
+      \ ['js', 'jsx', 'vue'],
+      \ ['r', 'rmd', 'rnw', 'rtex', 'rrst'],
+      \ ['pl', 'pm', 'pm6', 'perl', 'plh', 'plx', 'pod', 't'],
+      \ ['rb', 'erb', 'haml', 'slim'],
+      \ ['f', 'f77', 'f90', 'f95', 'f03', 'for', 'ftn', 'fpp'],
+      \ ]
+
+function s:Fileext(f)
+  let fe = matchstr(s:langmap,string(fnamemodify(a:f,':e')))
+  if fe isnot ''
+    return join(['find',getcwd(),escape(join(
+          \ ['( -iname '.join(map(copy(fe),'string("*.".v:val)'),' -or -iname ')] +
+          \ [')']),'()'),'-print0 | xargs -0'])
+  endif
+  return 'find '.getcwd().' -iname '.string('*.'.fnamemodify(a:f,':e')).' -print0 | xargs -0'
+endfunction
+
 let [s:ag, s:rg, s:grep] = ['', '', '']
 function s:prog()
   if get(b:,'preferred_searcher') !~# '^\%([ar]g\|\%(git-\)\=grep\)$'
@@ -22,7 +50,7 @@ function s:prog()
   endif
 endfunction
 
-let s:timeout = executable('timeout') ? 'timeout 5 ' : executable('gtimeout') ? 'gtimeout 5 ' : ''
+let s:timeout = executable('timeout') ? 'timeout 5' : executable('gtimeout') ? 'gtimeout 5' : ''
 let s:f = fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json'
 
 function s:loaddefs()
@@ -84,10 +112,10 @@ function s:prune(kw)
 endfunction
 
 let s:searchprg  = {
-      \ 'rg': {'opts': ' --no-messages --color never --vimgrep -g ''*.%:e'' -e '},
-      \ 'grep': {'opts': ' --no-messages -rnH --color=never --include=''*.%:e'' -E -e '},
+      \ 'rg': {'opts': ' --no-messages --color never --vimgrep -e '},
+      \ 'grep': {'opts': ' --no-messages -rnH --color=never -E -e '},
       \ 'git-grep': {'opts': ' --untracked --line-number --no-color -E -e '},
-      \ 'ag': {'opts': ' --silent --nocolor --vimgrep -G ''.*\.%:e$'' '}
+      \ 'ag': {'opts': ' --silent --nocolor --vimgrep '}
       \ }
 
 function s:Grep(token)
@@ -108,14 +136,9 @@ function s:Grep(token)
   endif
   let args = substitute(args,'\C\\j', '-' !~ '\k' ? '\\b' :
         \ b:preferred_searcher ==# 'ag' ? '(?!|[^\\w-])' : '($|[^\\w-])','g')
-  if b:preferred_searcher ==# 'git-grep'
-    let args .= " -- '*.".expand('%:e')."'"
-  endif
-  let grepcmd = s:timeout . tr(b:preferred_searcher,'-',' ')
-        \ . substitute(substitute(s:searchprg[b:preferred_searcher]['opts']
-        \ , '\C%:e', '\=expand(submatch(0))', 'g')
-        \ . args
-        \ , '\CJJJ', a:token, 'g')
+  let grepcmd = join([s:timeout,s:Fileext(expand('%')),tr(b:preferred_searcher,'-',' ')
+        \ . s:searchprg[b:preferred_searcher]['opts'] . substitute(args
+        \ , '\CJJJ', a:token, 'g'),'--'])
   let prev = getqflist()
   silent! cexpr sort(systemlist(grepcmd),function('s:funcsort'))[0]."\n"
   call setqflist(prev,'r')
