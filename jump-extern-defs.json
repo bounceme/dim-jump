@@ -1177,7 +1177,7 @@
          "git-grep"
       ],
       "language":"javascript",
-      "regex":"\\bJJJ\\s*\\([^\\)]*\\)\\s*[{]",
+      "regex":"\\bJJJ\\s*\\([^()]*\\)\\s*[{]",
       "tags":[
          "es6"
       ],
