@@ -59,7 +59,7 @@ function s:wordpat(token,cmd)
   return ft is '' ? substitute(substitute(a:cmd,'\C\\j','\\b','g'), "JJJ",a:token,"g") :
         \ substitute(substitute(a:cmd,'\C\\[jb]',b:preferred_searcher ==# 'ag' ?
         \ '(?!|[^\\w'.ft.'])' : '($|^|[^\\w'.ft.'])','g'), "JJJ",
-        \ escape(substitute(a:token,'[^[:alnum:]_]','[&]','g'), '^-\[]'), "g")
+        \ escape(substitute(a:token,'[^[:alnum:]_]','[&]','g'), '^\'), "g")
 endfunction
 
 function s:loaddefs()
