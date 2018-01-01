@@ -54,20 +54,22 @@ endfunction
 let s:timeout = executable('timeout') ? 'timeout 5' : executable('gtimeout') ? 'gtimeout 5' : ''
 let s:f = fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json'
 
+function s:wordpat(token,cmd)
+  let ft = escape(substitute('~`@#$%^-\[]&*()+=;<>,./?|{}','\(\k\)\|.','\1','g'),'^-\[]')
+  return ft is '' ? substitute(substitute(a:cmd,'\C\\j','\\b','g'), "JJJ",a:token,"g") :
+        \ substitute(substitute(a:cmd,'\C\\[jb]',b:preferred_searcher ==# 'ag' ?
+        \ '(?!|[^\\w'.ft.'])' : '($|^|[^\\w'.ft.'])','g'), "JJJ",
+        \ escape(substitute(a:token,'[^[:alnum:]_]','[&]','g'), '^-\[]'), "g")
+endfunction
+
 function s:loaddefs()
   if !exists('s:defs')
-    try
-      if exists('*json_decode')
-        let s:defs = json_decode(join(readfile(s:f)))
-      else
-        let l:strdefs = join(readfile(s:f))
-        sandbox let s:defs = eval(l:strdefs)
-        unlet! l:strdefs
-      endif
-    catch
-      unlet! l:strdefs
-      let s:defs = []
-    endtry
+    if exists('*json_decode')
+      let s:defs = json_decode(join(readfile(s:f)))
+    else
+      let l:strdefs = join(readfile(s:f))
+      sandbox let s:defs = eval(l:strdefs)
+    endif
     call map(s:defs,'filter(v:val,''v:key !~# "^\\%(tests\\|not\\)$"'')')
   endif
   return s:defs
@@ -92,7 +94,6 @@ endfunction
 
 let s:contexts = [
       \ {"language": "javascript","type": "function","right": "^("},
-      \ {"language": "javascript","type": "variable","left": "($"},
       \ {"language": "javascript","type": "variable","right": "^)","left": "($"},
       \ {"language": "javascript","type": "variable","right": "^\\."},
       \ {"language": "javascript","type": "variable","right": "^;"},
@@ -113,10 +114,10 @@ function s:prune(kw)
 endfunction
 
 let s:searchprg  = {
-      \ 'rg': {'opts': ' --no-messages --color never --vimgrep -e '},
-      \ 'grep': {'opts': ' --no-messages -rnH --color=never -E -e '},
-      \ 'git-grep': {'opts': ' --untracked --line-number --no-color -E -e '},
-      \ 'ag': {'opts': ' --silent --nocolor --vimgrep '}
+      \ 'rg': {'opts': '--no-messages --color never --vimgrep -e'},
+      \ 'grep': {'opts': '--no-messages -rnH --color=never -E -e'},
+      \ 'git-grep': {'opts': '--untracked --line-number --no-color -E -e'},
+      \ 'ag': {'opts': '--silent --nocolor --vimgrep'}
       \ }
 
 function s:Grep(token)
@@ -135,11 +136,9 @@ function s:Grep(token)
   else
     let args = shellescape(join(args,'|'))
   endif
-  let args = substitute(args,'\C\\j', '-' !~ '\k' ? '\\b' :
-        \ b:preferred_searcher ==# 'ag' ? '(?!|[^\\w-])' : '($|[^\\w-])','g')
+  let args = s:wordpat(a:token,args)
   let grepcmd = join([s:timeout,s:Fileext(expand('%')),tr(b:preferred_searcher,'-',' ')
-        \ . s:searchprg[b:preferred_searcher]['opts'] . substitute(args
-        \ , '\CJJJ', a:token, 'g'),'--'])
+        \ ,s:searchprg[b:preferred_searcher]['opts'],args,'--'])
   let prev = getqflist()
   silent! cexpr sort(systemlist(grepcmd),function('s:funcsort'))[0]."\n"
   call setqflist(prev,'r')
@@ -147,23 +146,19 @@ function s:Grep(token)
 endfunction
 
 function s:funcsort(a,b)
-  let [aa,bb] = [0,0]
-  if match(a:a,'\V\^'.escape(expand('%'),'\')) != -1
-    let aa = -1
-  endif
-  if match(a:b,'\V\^'.escape(expand('%'),'\')) != -1
-    let bb = 1
-  endif
-  return aa + bb
+  return matchend(fnamemodify(expand('%'),':p'),'\V\^'.
+        \ escape(fnamemodify(matchstr(a:b,'^\f\+'),':p:h'),'\')) -
+        \ matchend(fnamemodify(expand('%'),':p'),'\V\^'.
+        \ escape(fnamemodify(matchstr(a:a,'^\f\+'),':p:h'),'\'))
 endfunction
 
 function s:GotoDefCword()
+  call s:prog()
   let kw = s:prune(expand('<cword>'))
   if kw isnot ''
-    call s:prog()
     if !exists('b:dim_jump_lang')
-      let b:dim_jump_lang = filter(deepcopy(s:loaddefs(),1)
-            \ ,'v:val.language ==? &ft && index(v:val.supports, b:preferred_searcher) != -1')
+      let b:dim_jump_lang = filter(deepcopy(s:loaddefs(),1),
+            \ 'v:val.language ==? &ft && count(v:val.supports, b:preferred_searcher)')
     endif
     call s:Grep(kw)
   endif
