@@ -58,7 +58,7 @@ function s:wordpat(token,cmd)
   let ft = escape(substitute('~`@#$%^-\[]&*()+=;<>,./?|{}','\(\k\)\|.','\1','g'),'^-\[]')
   return ft is '' ? substitute(substitute(a:cmd,'\C\\j','\\b','g'), "JJJ",a:token,"g") :
         \ substitute(substitute(a:cmd,'\C\\[jb]',b:preferred_searcher ==# 'ag' ?
-        \ '(?!|[^\\w'.ft.'])' : '($|^|[^\\w'.ft.'])','g'), "JJJ",
+        \ '(?![^\\w'.ft.'])' : '($|^|[^\\w'.ft.'])','g'), "JJJ",
         \ escape(substitute(a:token,'[^[:alnum:]_]','[&]','g'), '^\'), "g")
 endfunction
 
