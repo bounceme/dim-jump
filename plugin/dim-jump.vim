@@ -139,8 +139,14 @@ function s:Grep(token)
   let grepcmd = join([s:timeout,s:Fileext(expand('%')),tr(b:preferred_searcher,'-',' ')
         \ ,s:searchprg[b:preferred_searcher]['opts'],args,'--'])
   let prev = getqflist()
-  silent! cexpr sort(systemlist(grepcmd),function('s:funcsort'))[0]."\n"
-  call setqflist(prev,'r')
+  let res = systemlist(grepcmd)
+  if len(res)
+    silent cexpr sort(res,function('s:funcsort'))[0]."\n"
+    if getline('.')[col('.')-1] !~ '\k'
+      call search('\V\<'.escape(a:token,'\').'\>','W')
+    endif
+    call setqflist(prev,'r')
+  endif
   let &errorformat = grepf
 endfunction
 
