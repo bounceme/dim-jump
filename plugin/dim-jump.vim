@@ -66,8 +66,7 @@ function s:loaddefs()
     if exists('*json_decode')
       let s:defs = json_decode(join(readfile(s:f)))
     else
-      let l:strdefs = join(readfile(s:f))
-      sandbox let s:defs = eval(l:strdefs)
+      exe 'sandbox let s:defs =' join(readfile(s:f),'')
     endif
     call map(s:defs,'filter(v:val,''v:key !~# "^\\%(tests\\|not\\)$"'')')
   endif
