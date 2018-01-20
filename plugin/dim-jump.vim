@@ -21,7 +21,7 @@ let s:langmap = [
       \ ['f', 'f77', 'f90', 'f95', 'f03', 'for', 'ftn', 'fpp'],
       \ ]
 
-function s:Fileext(f)
+function s:Fileext(f) abort
   let fe = matchstr(s:langmap, string(fnamemodify(a:f,':e')))
   if fe isnot ''
     return join(['find', getcwd(), escape(join(
@@ -33,7 +33,7 @@ function s:Fileext(f)
 endfunction
 
 let [s:ag, s:rg, s:grep] = ['', '', '']
-function s:prog()
+function s:prog() abort
   if get(b:,'preferred_searcher') !~# '^\%([ar]g\|\%(git-\)\=grep\)$'
     if system('git rev-parse --is-inside-work-tree')[:-2] is# 'true'
       let b:preferred_searcher = 'git-grep'
@@ -54,26 +54,28 @@ endfunction
 let s:timeout = executable('timeout') ? 'timeout 5' : executable('gtimeout') ? 'gtimeout 5' : ''
 let s:f = fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json'
 
-function s:wordpat(token,cmd)
+function s:wordpat(token,cmd) abort
   let ft = escape(substitute('~`@#$%^-\[]&*()+=;<>,./?|{}','\(\k\)\|.','\1','g'),'^-\[]')
   return ft is '' ? substitute(substitute(a:cmd,'\C\\j','\\b','g'), "JJJ",a:token,"g") :
         \ substitute(substitute(a:cmd,'\C\\[jb]','($|^|[^\\w'.ft.'])','g'), "JJJ",
         \ escape(substitute(a:token,'[^[:alnum:]_]','[&]','g'), '^\'), "g")
 endfunction
 
-function s:loaddefs()
+let s:sed = fnamemodify(expand('<sfile>:p:h:h'),':p').'parse.sed'
+function s:loaddefs() abort
   if !exists('s:defs')
-    if exists('*json_decode')
-      let s:defs = json_decode(join(readfile(s:f)))
-    else
-      exe 'sandbox let s:defs =' join(readfile(s:f),'')
+    if !filereadable(s:f)
+      call writefile(systemlist(join(['curl -s',
+            \ 'https://raw.githubusercontent.com/jacktasia/dumb-jump/master/dumb-jump.el',
+            \ '|','sed -n -f',s:sed])), s:f)
     endif
-    call map(s:defs,'filter(v:val,''v:key !~# "^\\%(tests\\|not\\)$"'')')
+    let raw = join(readfile(s:f))[:-2]
+    sandbox let s:defs = eval('['.raw.']')
   endif
   return s:defs
 endfunction
 
-function s:Refine()
+function s:Refine() abort
   let type = []
   let con = filter(deepcopy(s:contexts), 'v:val.language ==? &ft')
   if !len(con)
@@ -104,7 +106,7 @@ let s:transforms = {
       \ 'clojure': 'substitute(JJJ,".*/","","")',
       \ 'ruby': 'substitute(JJJ,"^:","","")'
       \ }
-function s:prune(kw)
+function s:prune(kw) abort
   if has_key(s:transforms,&ft)
     return eval(substitute(s:transforms[&ft],'\CJJJ',string(a:kw),'g'))
   endif
@@ -118,7 +120,7 @@ let s:searchprg  = {
       \ 'ag': {'opts': '--silent --nocolor --vimgrep'}
       \ }
 
-function s:Grep(token)
+function s:Grep(token) abort
   let args = map(s:Refine(),'v:val.regex')
   if args == []
     silent! exe "norm! [\<Tab>"
@@ -149,14 +151,14 @@ function s:Grep(token)
   let &errorformat = grepf
 endfunction
 
-function s:funcsort(a,b)
+function s:funcsort(a,b) abort
   return matchend(fnamemodify(expand('%'),':p'),'\V\^'.
         \ escape(fnamemodify(matchstr(a:b,'^\f\+'),':p:h'),'\')) -
         \ matchend(fnamemodify(expand('%'),':p'),'\V\^'.
         \ escape(fnamemodify(matchstr(a:a,'^\f\+'),':p:h'),'\'))
 endfunction
 
-function s:GotoDefCword()
+function s:GotoDefCword() abort
   call s:prog()
   let kw = s:prune(expand('<cword>'))
   if kw isnot ''
