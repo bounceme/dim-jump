@@ -69,7 +69,7 @@ function s:loaddefs() abort
             \ 'https://raw.githubusercontent.com/jacktasia/dumb-jump/master/dumb-jump.el',
             \ '|','sed -n -f',s:sed])), s:f)
     endif
-    let raw = join(readfile(s:f))[:-2]
+    let raw = join(readfile(s:f))
     sandbox let s:defs = eval('['.raw.']')
   endif
   return s:defs
