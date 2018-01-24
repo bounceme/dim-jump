@@ -55,7 +55,7 @@ let s:timeout = executable('timeout') ? 'timeout 5' : executable('gtimeout') ? '
 let s:f = fnamemodify(expand('<sfile>:p:h:h'),':p').'jump-extern-defs.json'
 
 function s:wordpat(token,cmd) abort
-  let ft = escape(substitute('''"~`@#$%^-\[]&*()+=;<>,./?|{}','\(\k\)\|.','\1','g'),'^-\[]')
+  let ft = escape(substitute('''"!~`@#$%^-\[]&*()+=;<>,./?|{}','\(\k\)\|.','\1','g'),'^-\[]')
   return ft is '' ? substitute(substitute(a:cmd,'\C\\j','\\b','g'), "JJJ",a:token,"g") :
         \ substitute(substitute(a:cmd,'\C\\[jb]','($|^|[^\\w'.ft.'])','g'), "JJJ",
         \ escape(substitute(a:token,'[^[:alnum:]_]','[&]','g'), '^\'), "g")
