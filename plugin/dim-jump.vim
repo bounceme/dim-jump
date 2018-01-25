@@ -21,15 +21,19 @@ let s:langmap = [
       \ ['f', 'f77', 'f90', 'f95', 'f03', 'for', 'ftn', 'fpp'],
       \ ]
 
+function s:jn(...) abort
+  return join(a:000)
+endfunction
+
 function s:Fileext(f) abort
   let fe = matchstr(s:langmap, string(fnamemodify(a:f,':e')))
   if fe isnot ''
-    return join(['find', getcwd(), escape(join(
-          \ ['( -iname '.join(map(copy(fe), 'string("*.".v:val)'), ' -or -iname ')] +
-          \ [')']), '()'), '-print0 | xargs -0'])
+    return s:jn('find', getcwd(), escape(s:jn(
+          \ '( -iname', join(map(copy(fe), 'string("*.".v:val)'), ' -or -iname '),
+          \ ')'), '()'), '-print0 | xargs -0')
   endif
-  return join(['find', getcwd(), '-iname', string('*.'.fnamemodify(a:f,':e')),
-        \ '-print0 | xargs -0'])
+  return s:jn('find', getcwd(), '-iname', string('*.'.fnamemodify(a:f,':e')),
+        \ '-print0 | xargs -0')
 endfunction
 
 let [s:ag, s:rg, s:grep] = ['', '', '']
@@ -65,9 +69,9 @@ let s:sed = fnamemodify(expand('<sfile>:p:h:h'),':p').'parse.sed'
 function s:loaddefs() abort
   if !exists('s:defs')
     if !filereadable(s:f)
-      call writefile(systemlist(join(['curl -s',
+      call writefile(systemlist(s:jn('curl -s',
             \ 'https://raw.githubusercontent.com/jacktasia/dumb-jump/master/dumb-jump.el',
-            \ '|','sed -n -f',s:sed])), s:f)
+            \ '|','sed -n -f',s:sed)), s:f)
     endif
     let raw = join(readfile(s:f))
     sandbox let s:defs = eval('['.raw.']')
@@ -137,8 +141,8 @@ function s:Grep(token) abort
     let args = shellescape(join(args,'|'))
   endif
   let args = s:wordpat(a:token,args)
-  let grepcmd = join([s:timeout,s:Fileext(expand('%')),tr(b:preferred_searcher,'-',' ')
-        \ ,s:searchprg[b:preferred_searcher]['opts'],args,'--'])
+  let grepcmd = s:jn(s:timeout,s:Fileext(expand('%')),tr(b:preferred_searcher,'-',' ')
+        \ ,s:searchprg[b:preferred_searcher]['opts'],args,'--')
   let prev = getqflist()
   let res = systemlist(grepcmd)
   if len(res)
@@ -152,10 +156,8 @@ function s:Grep(token) abort
 endfunction
 
 function s:funcsort(a,b) abort
-  return matchend(fnamemodify(expand('%'),':p'),'\V\^'.
-        \ escape(fnamemodify(matchstr(a:b,'^\f\+'),':p:h'),'\')) -
-        \ matchend(fnamemodify(expand('%'),':p'),'\V\^'.
-        \ escape(fnamemodify(matchstr(a:a,'^\f\+'),':p:h'),'\'))
+  return len(split(fnamemodify(matchstr(a:b,'^\f\+'),':.'),'/')) -
+        \ len(split(fnamemodify(matchstr(a:a,'^\f\+'),':.'),'/'))
 endfunction
 
 function s:GotoDefCword() abort
