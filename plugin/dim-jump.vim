@@ -27,7 +27,7 @@ endfunction
 
 function s:Fileext(f) abort
   let fe = matchstr(s:langmap, string(fnamemodify(a:f,':e')))
-  if fe isnot ''
+  if len(fe) > 1
     return s:jn('find', getcwd(), escape(s:jn(
           \ '( -iname', join(map(copy(fe), 'string("*.".v:val)'), ' -or -iname '),
           \ ')'), '()'), '-print0 | xargs -0')
