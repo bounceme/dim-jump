@@ -156,8 +156,13 @@ function s:Grep(token) abort
 endfunction
 
 function s:funcsort(a,b) abort
-  return len(split(fnamemodify(matchstr(a:b,'^\f\+'),':.'),'/')) -
-        \ len(split(fnamemodify(matchstr(a:a,'^\f\+'),':.'),'/'))
+  let [a,b] = map([a:a,a:b],'matchstr(v:val,"^\\f\\+")')
+  let c = (index([a,0,b],expand('%')) - 1) % 2
+  if c
+    return c
+  endif
+  return len(split(fnamemodify(b,':.'),'/')) -
+        \ len(split(fnamemodify(a,':.'),'/'))
 endfunction
 
 function s:GotoDefCword() abort
