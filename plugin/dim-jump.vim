@@ -65,16 +65,28 @@ function s:wordpat(token,cmd) abort
         \ escape(substitute(a:token,'[^[:alnum:]_]','[&]','g'), '^\'), "g")
 endfunction
 
-let s:sed = fnamemodify(expand('<sfile>:p:h:h'),':p').'parse.sed'
 function s:loaddefs() abort
   if !exists('s:defs')
     if !filereadable(s:f)
-      call writefile(systemlist(s:jn('curl -s',
-            \ 'https://raw.githubusercontent.com/jacktasia/dumb-jump/master/dumb-jump.el',
-            \ '|','sed -n -f',s:sed)), s:f)
+      let [sec,out] = [0,[]]
+      for i in systemlist('curl -s https://raw.githubusercontent.com/jacktasia/dumb-jump/master/dumb-jump.el')
+        if sec
+          if i =~# '^\s*:regex "'
+            let sec = 0
+            let out += [substitute(substitute(i,'^\s*:regex\s\+\("\%(\\.\|[^"]\)*"\).*','"regex": \1}',''),
+                  \ '[^\\]\zs\\\ze\%(\\\\\)\+[^\\"]','','g')]
+          endif
+        elseif i =~# '^\s*[''(]\+:type "'
+          let sec = 1
+          let out += [substitute(i,
+                \ '^\s*[''(]\+:type \("[^"]\+"\)\s\+:supports\s\+(\([^)]\+\))\s\+:language\s\+\("[^"]\+"\).*',
+                \ '{"type": \1,"supports": split(''\2'',''[ "]\\+''),"language": \3','')]
+        endif
+      endfor
+      call writefile(out,s:f)
     endif
-    let raw = join(readfile(s:f))
-    sandbox let s:defs = eval('['.raw.']')
+    let vimExp = '['.join(readfile(s:f),',').']'
+    sandbox let s:defs = eval(vimExp)
   endif
   return s:defs
 endfunction
